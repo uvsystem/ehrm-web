@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-3">
 		<a href="#">
-			<div class="alert alert-success" role="alert" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai" href="#">
+			<div class="alert alert-info" role="alert" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai" href="#">
 				<span class="glyphicon glyphicon-user big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Pegawai</b>
 			</div>
 		</a>
@@ -66,11 +66,13 @@
 					</div>
 					<div class="form-group">
 						<label for="form-pegawai-skpd" class="control-label">SKPD</label>
-						<input type="text" class="form-control" id="form-pegawai-skpd" placeholder="Masukan SKPD" />
+						<input type="text" class="form-control" id="form-pegawai-skpd" list="list-skpd" placeholder="Pilih SKPD" />
+						<datalist id="list-skpd"></datalist>
 					</div>
 					<div class="form-group">
 						<label for="form-pegawai-bagian" class="control-label">Bagian</label>
-						<input type="text" class="form-control" id="form-pegawai-bagian" placeholder="Masukan Bagian" />
+						<input type="text" class="form-control" id="form-pegawai-bagian" list="list-bagian" placeholder="Pilih Bagian" />
+						<datalist id="list-bagian"></datalist>
 					</div>
 				</form>
 	        </div><!-- modal-body -->

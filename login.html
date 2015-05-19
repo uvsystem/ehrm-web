@@ -1,62 +1,40 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <!-- Bootstrap's CSS -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Cover's CSS -->
-	<link rel="stylesheet" href="css/cover.css">
-    <!-- Cover's CSS -->
-	<link rel="stylesheet" href="css/unitedvision-site.css">
+<!-- saved from url=(0040)http://getbootstrap.com/examples/signin/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Deddy Ch. Kakunsi">
+    <link rel="icon" href="images/favicon.png">
 
-    <title>UnitedVision</title>
+    <title>Sistem Absensi | Login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
   </head>
+
   <body>
-    <div class="site-wrapper">
-      <div class="site-wrapper-inner">
-        <div class="cover-container">
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand"><a href="https:uvs.web.id">UnitedVision</a></h3>
-              <ul class="nav masthead-nav">
-                <li><a id="link-login" href="#" data-toggle="modal" data-target="#modal-login">Login</a></li>
-              </ul>
-            </div>
-          </div>
-		  <div id="content"></div>
-          <div class="mastfoot">
-            <div class="inner">
-              <p>UnitedVision. 2015</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-	<div class="modal fade" id="modal-login" role="dialog">
-	  <div class="modal-dialog  modal-cover">
-		<div class="modal-content modal-cover">
-		  <div class="modal-header">
-		    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-		    <h4 class="modal-title">Login</h4>
-		  </div>
-		  <div class="modal-body modal-cover">
-		    <form name="f" id="form-login">
-		      <fieldset>
-                <label for="username" class="control-label">Username:</label>
-		        <input type="text" class="form-control" id="username" placeholder="Masukan Username" />
-		        <br />
-                <label for="password" class="control-label">Password:</label>
-		        <input type="password" class="form-control" id="password" placeholder="Masukan Password"/>
-		        <br />
-		      </fieldset>
-		    </form>
-		  </div><!-- modal-body -->
-		  <div class="modal-footer">
-		    <button class="btn btn-default" id="btn-cancel-login" data-dismiss="modal">Tutup</button>
-		    <button class="btn btn-default" id="btn-login" data-dismiss="modal" form="form-login">Login</button>
-		  </div>
-		</div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+
+    <div class="container">
+
+      <form class="form-login">
+        <h2 class="form-login-heading">Silahkan Login</h2>
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="Username" required="" autofocus="">
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Password" required="">
+        <button id="btn-login" class="btn btn-lg btn-primary btn-block" type="button">Login</button>
+      </form>
+
+    </div> <!-- /container -->
+	
+	<!-- Wait Modal-->
 	<div class="modal fade" id="waitModal" role="dialog" value="false">
 		<div class="modal-dialog">
 			<div class="modal-content modal-cover">
@@ -71,7 +49,6 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->'
-  </body>
 
 	<!-- Required Library --> 
 	<!-- jQuery Library -->
@@ -85,5 +62,5 @@
     <script src="js/uvs-api.js"></script>
     <script src="js/uvs-object.js"></script>
     <script src="js/login.js"></script>
-  
+  </body>
 </html>

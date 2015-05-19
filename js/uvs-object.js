@@ -82,6 +82,311 @@ var user = {
 };
 
 /*
+ * Definisi resources untuk data SKPD.
+ */
+var skpd = {
+	
+	nama: 'SKPD',
+	
+	currentObject: null,
+		
+	defaultObject: {
+		id: 0,
+		kode: 'DEFAULT',
+		nama: ''
+	},
+
+	success: function ( result ) {
+
+		message.success( result );
+		
+		skpd.reload();
+		
+		skpd.currentObject = null;
+
+	},
+	
+	reload: function() {
+
+		var onSuccess = function( result ) {
+		
+			skpd.load( result.list );
+			
+			storage.set( result.list, skpd.nama );
+		
+		};
+		
+		rest.call( '/skpd', null, 'GET', onSuccess, message.error );
+
+	},
+	
+	load: function( list ) {
+
+		page.setName( skpd.nama );
+		
+		skpd.content.getContent();
+		
+		skpd.content.setData( list );
+		
+	},
+	
+
+	content: {
+	 
+		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = skpd;
+			activeContainer.list = list;
+			
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';	
+			
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
+			
+				var tmp = list[ index ];
+
+				html += '<tr>' +
+					'<td>' + tmp.kode + '</td>' +
+					'<td>' + tmp.nama + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="skpd.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</button>' +
+					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
+		},
+		
+		getContent: function( list ) {
+
+			page.load( $( '#content' ), 'html/skpd.html' );
+			
+		},
+
+		getObject: function() {
+		
+			var object = skpd.currentObject;
+			
+			if ( !object )
+				object = choose( null, skpd.defaultObject);
+
+			object.kode = $( '#form-skpd-kode' ).val();
+			object.nama = $( '#form-skpd-nama' ).val();
+							
+			return object;
+		
+		},
+
+		setDetail: function( id ) {
+
+			var obj = storage.getById( skpd, id );
+			
+			this.resetForm( obj );
+			
+		},
+		
+		resetForm: function( obj ) {
+
+			$( '#form-skpd-kode' ).val( obj.username );
+			$( '#form-skpd-nama' ).val( obj.password );
+			
+			skpd.currentObject = obj;
+		
+		},		
+	},
+	
+	loader: {
+	
+		loadSearch: function( keyword ) {
+		
+			var onSuccess = function( result ) {
+			
+				var list = page.list.get( result );
+				skpd.load( list );
+				
+			};
+			
+			rest.call( '/skpd/search/' + keyword, '', 'GET', onSuccess, message.error );
+			
+		}
+	}
+};
+
+/*
+ * Definisi resources untuk data bagian/bidang.
+ */
+var bagian = {
+	
+	nama: 'BAGIAN',
+	
+	currentObject: null,
+		
+	defaultObject: {
+		id: 0,
+		kode: 'DEFAULT',
+		nama: '',
+		skpd:{
+			id: 0,
+			kode: 'DEFAULT',
+			nama: '',
+		}
+	},
+
+	success: function ( result ) {
+
+		message.success( result );
+		
+		bagian.reload();
+		
+		bagian.currentObject = null;
+
+	},
+	
+	reload: function() {
+
+		var onSuccess = function( result ) {
+		
+			bagian.load( result.list );
+			
+			storage.set( result.list, bagian.nama );
+		
+		};
+		
+		rest.call( '/bagian', null, 'GET', onSuccess, message.error );
+
+	},
+	
+	load: function( list ) {
+
+		page.setName( bagian.nama );
+		
+		bagian.content.getContent();
+		
+		bagian.content.setData( list );
+		
+	},
+	
+
+	content: {
+	 
+		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = bagian;
+			activeContainer.list = list;
+			
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';	
+			
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
+			
+				var tmp = list[ index ];
+
+				html += '<tr>' +
+					'<td>' + tmp.kode + '</td>' +
+					'<td>' + tmp.nama + '</td>' +
+					'<td>' + ( !tmp.skpd ? '' : tmp.skpd.nama ) + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="bagian.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-bagian">Detail</button>' +
+					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
+		},
+		
+		getContent: function( list ) {
+
+			page.load( $( '#content' ), 'html/bagian.html' );
+			
+		},
+
+		getObject: function() {
+		
+			var object = bagian.currentObject;
+			
+			if ( !object )
+				object = choose( null, bagian.defaultObject);
+
+			object.kode = $( '#form-bagian-kode' ).val();
+			object.nama = $( '#form-bagian-nama' ).val();
+			object.skpd = storage.getByNama( skpd, $( '#form-bagian-skpd' ).val() );
+							
+			return object;
+		
+		},
+
+		setDetail: function( id ) {
+
+			var obj = storage.getById( bagian, id );
+			
+			this.resetForm( obj );
+			
+			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
+			
+		},
+		
+		resetForm: function( obj ) {
+
+			$( '#form-bagian-kode' ).val( obj.kode );
+			$( '#form-bagian-nama' ).val( obj.nama );
+			
+			var namaSkpd = ( obj.skpd ) ? obj.skpd.nama : '';
+			$( '#form-bagian-skpd' ).val( namaSkpd );
+			
+			bagian.currentObject = obj;
+		
+		},		
+	},
+	
+	loader: {
+	
+		loadSearch: function( keyword ) {
+		
+			var onSuccess = function( result ) {
+			
+				var list = page.list.get( result );
+				bagian.load( list );
+				
+			};
+			
+			rest.call( '/bagian/search/' + keyword, '', 'GET', onSuccess, message.error );
+			
+		},
+		
+		loadBySkpd: function( id ) {
+		
+			var onSuccess = function( result ) {
+			
+				var list = page.list.get( result );
+				bagian.load( list );
+				
+			};
+			
+			rest.call( '/bagian/skpd/' + id, '', 'GET', onSuccess, message.error );
+			
+		}
+	}
+};
+
+/*
  * Definisi resources untuk operatorAbsen.
  * Sangat tergantung pada variable page (api.js).
  */
@@ -159,7 +464,7 @@ var operatorAbsen = {
 					'<td>' + tmp.username + '</td>' +
 					'<td>' + tmp.password + '</td>' +
 					'<td>' + tmp.tipe + '</td>' +
-					'<td>' + tmp.lokasi + '</td>' +
+					'<td>' + ( tmp.skpd ? tmp.skpd.nama : '') + '</td>' +
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="operatorAbsen.content.setDetail(' + tmp.username	 + ')" data-toggle="modal" data-target="#modal-form-operator">Detail</button>' +
@@ -223,7 +528,7 @@ var operatorAbsen = {
 	
 		loadByUsername: function( username ) {
 		
-			var url = '/operatorAbsen/' + username;
+			var url = '/operator/' + username;
 			
 			var onSuccess = function( result ) {
 			
@@ -238,7 +543,7 @@ var operatorAbsen = {
 		
 		loadByTipe: function( tipe ) {
 			
-			var url = '/operatorAbsen/tipe/' + tipe;
+			var url = '/operator/tipe/' + tipe;
 			
 			var onSuccess = function( result ) {
 			
@@ -251,9 +556,10 @@ var operatorAbsen = {
 			
 		},
 		
+		// Lokasi berarti SKPD, parameter lokasi adalah idSkpd.
 		loadByLokasi: function( lokasi ) {
 			
-			var url = '/operatorAbsen/lokasi/' + lokasi;
+			var url = '/operator/lokasi/' + lokasi;
 			
 			var onSuccess = function( result ) {
 			
@@ -307,18 +613,16 @@ var absen = {
 
 	success: function ( result ) {
 
-		message.writeLog( 'Writing Message' ); // DEBUG
 		message.success( result );
 		
-		message.writeLog( 'Reloading Absen' ); // DEBUG
-		absen.reload();
+		absen.load( result.list );
 
 		absen.currentObject = null;
 
 	},
 
 	load: function( list ) {
-
+		
 		page.setName( absen.nama );
 		
 		absen.content.getContent();
@@ -328,16 +632,10 @@ var absen = {
 	},
 	
 	reload: function() {
+
+		page.setName( absen.nama );
 		
-		var onSuccess = function( result ) {
-		
-			absen.load( result.list );
-			
-			storage.set( result.list, absen.nama );
-		
-		};
-		
-		rest.call( '/absen/tanggal/' + myDate.nowFormattedString(), null, 'GET', onSuccess, message.error );
+		absen.content.getContent();
 		
 	},
 
@@ -395,6 +693,9 @@ var absen = {
 		getContent: function() {
 
 			page.load( $( '#content' ), 'html/absen.html' );
+
+			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
+			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 			
 		},
 
@@ -425,19 +726,16 @@ var absen = {
 			
 				var tmp = list[ index ];
 				
-				message.writeLog( 'Keterangan :' + tmp.keterangan ); // DEBUG
-
 				html += '<tr>' +
 					'<td>' + tmp.pegawai.nip + '</td>' +
 					'<td>' + tmp.pegawai.nama + '</td>' +
-					'<td>' + tmp.pegawai.skpd + '</td>' +
-					'<td>' + tmp.pegawai.bagian + '</td>' +
+					'<td>' + tmp.tanggalStr + '</td>' +
 					'<td>' + tmp.status + '</td>' +
 					'<td>' + tmp.pagiStr + '</td>' +
 					'<td>' + tmp.tengahStr + '</td>' +
 					'<td>' + tmp.siangStr + '</td>' +
 					'<td>' + tmp.soreStr + '</td>' +
-					'<td>' + ( tmp.keterangan != null ? tmp.keterangan : '' ) + '</td>' +
+					'<td>' + ( !tmp.keterangan ? '' : tmp.keterangan ) + '</td>' +
 					'</tr>';
 			}
 			
@@ -649,7 +947,6 @@ var pegawai = {
 		nama: '',
 		golongan: '',
 		jabatan: '',
-		skpd: '',
 		bagian: ''
 	},
 	
@@ -722,8 +1019,8 @@ var pegawai = {
 					'<td>' + tmp.nama + '</td>' +
 					'<td>' + tmp.golongan + '</td>' +
 					'<td>' + tmp.jabatan + '</td>' +
-					'<td>' + tmp.skpd + '</td>' +
-					'<td>' + tmp.bagian + '</td>' +
+					'<td>' + ( !tmp.bagian.skpd ? '' : tmp.bagian.skpd.nama ) + '</td>' +
+					'<td>' + tmp.bagian.nama + '</td>' +
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="pegawai.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</button>' +
@@ -749,8 +1046,7 @@ var pegawai = {
 			object.nama = $( '#form-pegawai-nama' ).val();
 			object.golongan = $( '#form-pegawai-golongan' ).val();
 			object.jabatan = $( '#form-pegawai-jabatan' ).val();
-			object.skpd = $( '#form-pegawai-skpd' ).val();
-			object.bagian = $( '#form-pegawai-bagian' ).val();
+			object.bagian = storage.getByNama( bagian, $( '#form-pegawai-bagian' ).val() );
 			
 			return object;
 		},
@@ -836,6 +1132,26 @@ var pegawai = {
 	
 	}
 	
+};
+
+var rekap = {
+
+	nama: 'REKAP',
+	
+	reload: function() {
+		
+		rekap.content.getContent();
+		
+	},
+	
+	content: {
+		
+		getContent: function() {
+
+			page.load( $( '#content' ), 'html/rekap.html');
+			
+		}
+	}
 };
 
 /*

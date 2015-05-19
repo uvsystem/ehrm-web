@@ -1,20 +1,14 @@
 <div class="row">
 	<div class="col-md-3">
-		<a href="#" data-toggle="dropdown" aria-expanded="false">
-			<div class="alert alert-success">
-				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Hadir</b>
+		<a href="#">
+			<div class="alert alert-info" id="btn-absen-tambah" data-toggle="modal" data-target="#modal-form-absen" href="#">
+				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Absen</b>
 			</div>
 		</a>
-		<ul class="dropdown-menu" role="menu">
-			<li><a id="btn-absen-pagi" href="#" data-toggle="modal" data-target="#modal-form-pagi">Pagi<span class="glyphicon glyphicon-calendar pull-right"></a></li>
-			<li><a id="btn-absen-tengah" href="#" data-toggle="modal" data-target="#modal-form-tengah">Tengah<span class="glyphicon glyphicon-calendar pull-right"></a></li>
-			<li><a id="btn-absen-siang" href="#" data-toggle="modal" data-target="#modal-form-siang">Siang<span class="glyphicon glyphicon-calendar pull-right"></a></li>
-			<li><a id="btn-absen-sore" href="#" data-toggle="modal" data-target="#modal-form-sore">Sore<span class="glyphicon glyphicon-calendar pull-right"></a></li>
-		</ul>
 	</div>
 	<div class="col-md-3">
 		<a href="#">
-			<div class="alert alert-warning" id="btn-absen-sakit" data-toggle="modal" data-target="#modal-form-sakit" href="#">
+			<div class="alert alert-info" id="btn-absen-sakit" data-toggle="modal" data-target="#modal-form-sakit" href="#">
 				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Sakit</b>
 			</div>
 		</a>
@@ -28,7 +22,7 @@
 	</div>
 	<div class="col-md-3">
 		<a href="#">
-			<div class="alert alert-danger" id="btn-absen-cuti" data-toggle="modal" data-target="#modal-form-cuti" href="#">
+			<div class="alert alert-info" id="btn-absen-cuti" data-toggle="modal" data-target="#modal-form-cuti" href="#">
 				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Cuti</b>
 			</div>
 		</a>
@@ -45,8 +39,7 @@
 							<tr>
 								<th class="center">NIP</th>
 								<th class="center">Nama</th>
-								<th class="center">SKPD</th>
-								<th class="center">Bagian</th>
+								<th class="center">Tanggal</th>
 								<th class="center">Status</th>
 								<th class="center">7:00</th>
 								<th class="center">10:00</th>
@@ -65,113 +58,77 @@
 						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward"></a>
 					</div>
 				</div>
-			</div>
-		</div>
+			</div><!-- body -->
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="input-group">
+							<input type="text" id="absen-skpd" list="list-skpd" class="form-control" placeholder="Pilih SKPD" aria-describedby="basic-addon1" />
+							<datalist id="list-skpd"></datalist>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="input-group">
+							<input type="text" id="absen-bagian" list="list-bagian" class="form-control" placeholder="Pilih Bagian" aria-describedby="basic-addon1" />
+							<datalist id="list-bagian"></datalist>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="input-group">
+							<input type="date" id="absen-tanggal-awal" class="form-control" placeholder="Tanggal Awal" aria-describedby="basic-addon1" />
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="input-group">
+							<input type="date" id="absen-tanggal-akhir" class="form-control" placeholder="Tanggal Akhir" aria-describedby="basic-addon1" />
+						</div>
+					</div>
+					<div class="col-md-1">
+						<button id="absen-cari" class="btn btn-primary"><span class="glyphicon glyphicon-search big-icon"></span></button>
+					</div>
+				</div>
+			</div><!-- row -->
+		</div><!-- footer -->
 	</div><!-- table -->
 </div><!-- row -->
 
-<div class="modal fade" id="modal-form-pagi" role="dialog">
+<div class="modal fade" id="modal-form-absen" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-				<h4 class="modal-title">Absen Pagi (7:00)</h4>
+				<h4 class="modal-title">Data Absen</h4>
 	        </div>
 	        <div class="modal-body">
 				<form role="form">
 					<div class="form-group">
-						<label for="form-absen-pagi-nip" class="control-label">NIP</label>
-						<input type="text" class="form-control" id="form-absen-pagi-nip" placeholder="Masukan NIP" />
+						<label for="form-absen-nip" class="control-label">NIP</label>
+						<input type="text" class="form-control" id="form-absen-nip" placeholder="Masukan NIP" />
 					</div>
 					<div class="form-group">
-						<label for="form-absen-pagi-jam" class="control-label">Waktu Masuk</label>
-						<input type="text" class="form-control" id="form-absen-pagi-jam" placeholder="07:00:00" />
+						<label for="form-absen-tanggal" class="control-label">Tanggal</label>
+						<input type="date" class="form-control" id="form-absen-tanggal" placeholder="Pilih Tanggal" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-pagi" class="control-label">Pagi</label>
+						<input type="text" class="form-control" id="form-absen-pagi" placeholder="07:00:00" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-tengah" class="control-label">Tengah</label>
+						<input type="text" class="form-control" id="form-absen-tengah" placeholder="10:00:00" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-siang" class="control-label">Siang</label>
+						<input type="text" class="form-control" id="form-absen-siang" placeholder="13:00:00" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-sore" class="control-label">Sore</label>
+						<input type="text" class="form-control" id="form-absen-sore" placeholder="16:00:00" />
 					</div>
 				</form>
 	        </div><!-- modal-body -->
 	        <div class="modal-footer">
-				<button class="btn btn-primary" id="btn-absen-pagi-simpan" data-dismiss="modal">Simpan</button>
-				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
-	        </div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" id="modal-form-tengah" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-				<h4 class="modal-title">Absen Tengah Hari (10:00)</h4>
-	        </div>
-	        <div class="modal-body">
-				<form role="form">
-					<div class="form-group">
-						<label for="form-absen-tengah-nip" class="control-label">NIP</label>
-						<input type="text" class="form-control" id="form-absen-tengah-nip" placeholder="Masukan NIP" />
-					</div>
-					<div class="form-group">
-						<label for="form-absen-tengah-jam" class="control-label">Waktu Masuk</label>
-						<input type="text" class="form-control" id="form-absen-tengah-jam" placeholder="10:00:00" />
-					</div>
-				</form>
-	        </div><!-- modal-body -->
-	        <div class="modal-footer">
-				<button class="btn btn-primary" id="btn-absen-tengah-simpan" data-dismiss="modal">Simpan</button>
-				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
-	        </div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" id="modal-form-siang" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-				<h4 class="modal-title">Absen Siang (13:00)</h4>
-	        </div>
-	        <div class="modal-body">
-				<form role="form">
-					<div class="form-group">
-						<label for="form-absen-siang-nip" class="control-label">NIP</label>
-						<input type="text" class="form-control" id="form-absen-siang-nip" placeholder="Masukan NIP" />
-					</div>
-					<div class="form-group">
-						<label for="form-absen-siang-jam" class="control-label">Waktu Masuk</label>
-						<input type="text" class="form-control" id="form-absen-siang-jam" placeholder="13:00:00" />
-					</div>
-				</form>
-	        </div><!-- modal-body -->
-	        <div class="modal-footer">
-				<button class="btn btn-primary" id="btn-absen-siang-simpan" data-dismiss="modal">Simpan</button>
-				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
-	        </div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" id="modal-form-sore" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-				<h4 class="modal-title">Absen Sore (16:00)</h4>
-	        </div>
-	        <div class="modal-body">
-				<form role="form">
-					<div class="form-group">
-						<label for="form-absen-sore-nip" class="control-label">NIP</label>
-						<input type="text" class="form-control" id="form-absen-sore-nip" placeholder="Masukan NIP" />
-					</div>
-					<div class="form-group">
-						<label for="form-absen-sore-jam" class="control-label">Waktu Masuk</label>
-						<input type="text" class="form-control" id="form-absen-sore-jam" placeholder="16:00:00" />
-					</div>
-				</form>
-	        </div><!-- modal-body -->
-	        <div class="modal-footer">
-				<button class="btn btn-primary" id="btn-absen-sore-simpan" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-primary" id="btn-absen-simpan" data-dismiss="modal">Simpan</button>
 				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
 	        </div>
 		</div><!-- /.modal-content -->
@@ -190,6 +147,10 @@
 					<div class="form-group">
 						<label for="form-absen-sakit-nip" class="control-label">NIP</label>
 						<input type="text" class="form-control" id="form-absen-sakit-nip" placeholder="Masukan NIP" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-sakit-tanggal" class="control-label">Tanggal</label>
+						<input type="date" class="form-control" id="form-absen-sakit-tanggal" placeholder="Pilih Tanggal" />
 					</div>
 					<div class="form-group">
 						<label for="form-absen-sakit-keterangan" class="control-label">Keterangan</label>
@@ -219,6 +180,10 @@
 						<input type="text" class="form-control" id="form-absen-izin-nip" placeholder="Masukan NIP" />
 					</div>
 					<div class="form-group">
+						<label for="form-absen-izin-tanggal" class="control-label">Tanggal</label>
+						<input type="date" class="form-control" id="form-absen-izin-tanggal" placeholder="Pilih Tanggal" />
+					</div>
+					<div class="form-group">
 						<label for="form-absen-izin-keterangan" class="control-label">Keterangan</label>
 						<input type="text" class="form-control" id="form-absen-izin-keterangan" placeholder="Masukan Keterangan" />
 					</div>
@@ -244,6 +209,10 @@
 					<div class="form-group">
 						<label for="form-absen-cuti-nip" class="control-label">NIP</label>
 						<input type="text" class="form-control" id="form-absen-cuti-nip" placeholder="Masukan NIP" />
+					</div>
+					<div class="form-group">
+						<label for="form-absen-cuti-tanggal" class="control-label">Tanggal</label>
+						<input type="date" class="form-control" id="form-absen-cuti-tanggal" placeholder="Pilih Tanggal" />
 					</div>
 					<div class="form-group">
 						<label for="form-absen-cuti-keterangan" class="control-label">Keterangan</label>

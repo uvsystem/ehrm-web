@@ -6,7 +6,7 @@
  * Manado, Indonesia.
  * deddy.kakunsi@gmail.com | deddykakunsi@outlook.com
  * 
- * Version: 1.1.0
+ * Version: 1.1.1
  */
  
 var myUrl = {
@@ -15,7 +15,7 @@ var myUrl = {
 	
 	apiHost: 'core-unitedvision.whelastic.net',
 	
-	printHost: 'core-unitedvision.whelastic.net',
+	printHost: this.apiHost,
 	
 	apiProject: 'absensi',
 	
@@ -71,17 +71,27 @@ var message = {
 		switch ( result.tipe ) {
 		
 			case "SUCCESS": console.log( "Proses SUCCESS" );
-					alert( 'Berhasil' );
+					page.change( $( '#message' ), 
+						'<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
+					// alert( 'Berhasil' );
 				break;
 			case "ENTITY": console.log( "Entity Set" );
 				break;
 			case "LIST": console.log( "List Set" );
 				break;
 			case "OBJECT": console.log( "Object Set" );
+					page.change( $( '#message' ), 
+						'<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
 				break;
-			case "MESSAGE": alert( result.message );
+			case "MESSAGE": 
+					page.change( $( '#message' ), 
+						'<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
+					// alert( result.message );
 				break;
-			case "ERROR": alert( result.message );
+			case "ERROR": 
+					page.change( $( '#message' ), 
+						'<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
+					// alert( result.message );
 				break;
 			default: console.log( "Tipe result tidak dikenali : " + result.tipe );
 		}
@@ -459,25 +469,23 @@ var rest = {
 				
 	    } );
 			
-		var success = function( result )
-		{
-			message.writeLog("Parsing JSON");
+		var success = function( result ) {
+
+			//message.writeLog( "Parsing JSON" );
 			//result = JSON.parse( result );
 			
-			message.writeLog("checking tipe");
-			if ( result.tipe == "OBJECT" )
-			{
+			if ( result.tipe == "OBJECT" ) {
+
 				// Atur token baru, token menggunakan RestMessage
 				operator.setToken( result.object );
 
 				message.write( "Berhasil Login!" );
 				window.location.href = 'index.html';
 
-			} else
-			{
-				// Cetak pesan dari server
+			} else {
+
 				message.write( result.message );
-					
+
 			}
 		};
 
@@ -694,16 +702,23 @@ var page = {
 			getAdmin: function() {
 				
 				return '<li class="divider"><hr /></li>' +
+					'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="SKPD"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">SKPD</b></a></li>' +
+					'<li><a id="menu-bagian" href="#" data-toggle="tooltip" data-placement="right" title="Bagian/Bidang"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Bagian</b></a></li>' +
 					'<li><a id="menu-pegawai" href="#" data-toggle="tooltip" data-placement="right" title="Pegawai"><span class="glyphicon glyphicon-user big-icon"></span><b class="icon-text">Pegawai</b></a></li>' +
+					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
 					'<li><a id="menu-operator" href="#" data-toggle="tooltip" data-placement="right" title="Operator"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Operator</b></a></li>' +
-					'<li><a id="menu-otentikasi" href="#" data-toggle="tooltip" data-placement="right" title="Otentikasi"><span class="glyphicon glyphicon-tasks big-icon"></span><b class="icon-text">Otentikasi</b></a></li>' +
-					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>';				
+					'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>';
+				
+					// Fitur belum didukung pada versi ini
+					// '<li><a id="menu-otentikasi" href="#" data-toggle="tooltip" data-placement="right" title="Otentikasi"><span class="glyphicon glyphicon-tasks big-icon"></span><b class="icon-text">Otentikasi</b></a></li>';
+				
 			},
 			
 			getPegawai: function() {
 				
-				return '</li>' +
-					'<li class="divider"><hr /></li>' +
+				return '<li class="divider"><hr /></li>' +
+					'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="SKPD"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">SKPD</b></a></li>' +
+					'<li><a id="menu-bagian" href="#" data-toggle="tooltip" data-placement="right" title="Bagian/Bidang"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Bagian</b></a></li>' +
 					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-shopping-cart big-icon"></span><b class="icon-text">Absensi</b></a></li>';
 				
 			}
@@ -1321,6 +1336,8 @@ var storage = {
 
 		this.fill ('Pegawai');
 		this.fill ('Operator');
+		this.fill ('Skpd');
+		this.fill ('Bagian');
 
 	},
 
@@ -1410,6 +1427,15 @@ var setupPage = function( list, container ) {
 var activeContainer;
 var set = 20;
 var tableSet = function( list, pageNumber) {
+
+	// Jika list kosong, return default value.
+	if ( list.length == 0 ) {
+		
+		return {
+			first: 0,
+			last: 0
+		};
+	}
 		
 	if ( !pageNumber )
 		pageNumber = 1;
