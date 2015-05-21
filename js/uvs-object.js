@@ -1052,6 +1052,9 @@ var pegawai = {
 		},
 		
 		setDetail: function( nip ) {
+		
+			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
+			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 
 			var obj = storage.getByNip( pegawai, nip );
 			
@@ -1065,8 +1068,8 @@ var pegawai = {
 			$( '#form-pegawai-nama' ).val( obj.nama );
 			$( '#form-pegawai-golongan' ).val( obj.golongan );
 			$( '#form-pegawai-jabatan' ).val( obj.jabatan );
-			$( '#form-pegawai-skpd' ).val( obj.skpd );
-			$( '#form-pegawai-bagian' ).val( obj.bagian );
+			$( '#form-pegawai-skpd' ).val( obj.bagian.skpd.nama );
+			$( '#form-pegawai-bagian' ).val( obj.bagian.nama );
 
 			pegawai.currentObject = obj;
 		
