@@ -6,7 +6,7 @@
  * Manado, Indonesia.
  * deddy.kakunsi@gmail.com | deddykakunsi@outlook.com
  * 
- * Version: 1.1.1
+ * Version: 1.1.0
  */
  
 var myUrl = {
@@ -717,8 +717,6 @@ var page = {
 			getPegawai: function() {
 				
 				return '<li class="divider"><hr /></li>' +
-					'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="SKPD"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">SKPD</b></a></li>' +
-					'<li><a id="menu-bagian" href="#" data-toggle="tooltip" data-placement="right" title="Bagian/Bidang"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Bagian</b></a></li>' +
 					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-shopping-cart big-icon"></span><b class="icon-text">Absensi</b></a></li>';
 				
 			}

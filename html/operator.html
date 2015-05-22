@@ -1,10 +1,3 @@
-<datalist id="list-tipe">
-	<option>ADMIN</option>
-	<option>PEGAWAI</option>
-	<option>PROGRAM</option>
-	<option>THIRD PARTY</option>
-</datalist>
-
 <div class="row">
 	<div class="col-md-3">
 		<a href="#">
@@ -64,10 +57,17 @@
 					<div class="form-group">
 						<label for="form-operator-tipe" class="control-label">Tipe</label>
 						<input type="text" class="form-control" id="form-operator-tipe" list="list-tipe" placeholder="Pilih Tipe" />
+						<datalist id="list-tipe">
+							<option>ADMIN</option>
+							<option>PEGAWAI</option>
+							<option>PROGRAM</option>
+							<option>THIRD PARTY</option>
+						</datalist>
 					</div>
 					<div class="form-group">
 						<label for="form-operator-lokasi" class="control-label">Lokasi</label>
-						<input type="text" class="form-control" id="form-operator-lokasi" placeholder="Masukan Lokasi" />
+						<input type="text" class="form-control" id="form-operator-lokasi" list="list-skpd" placeholder="Masukan Lokasi" />
+						<datalist id="list-skpd"></datalist>
 					</div>
 					<div class="form-group">
 						<label for="form-operator-deskripsi" class="control-label">Deskripsi</label>

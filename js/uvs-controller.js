@@ -432,9 +432,6 @@
 
 		pegawai.currentObject = choose( null, pegawai.defaultObject );
 		pegawai.content.resetForm( pegawai.currentObject );
-		
-		page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
-		page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 
 	} );
 

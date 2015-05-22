@@ -155,7 +155,6 @@ var skpd = {
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="skpd.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</button>' +
-					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -301,7 +300,6 @@ var bagian = {
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="bagian.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-bagian">Detail</button>' +
-					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -404,7 +402,9 @@ var operatorAbsen = {
 		username: '',
 		password: '',
 		tipe:'',
-		lokasi:'',
+		skpd:{
+			nama: ''
+		},
 		deskripsi:''
 	},
 
@@ -467,8 +467,7 @@ var operatorAbsen = {
 					'<td>' + ( tmp.skpd ? tmp.skpd.nama : '') + '</td>' +
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
-					'<button type="button" class="btn btn-danger" onclick="operatorAbsen.content.setDetail(' + tmp.username	 + ')" data-toggle="modal" data-target="#modal-form-operator">Detail</button>' +
-					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
+					'<button type="button" class="btn btn-danger" onclick="operatorAbsen.content.setDetail(' + tmp.username + ')" data-toggle="modal" data-target="#modal-form-operator">Detail</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -495,9 +494,8 @@ var operatorAbsen = {
 			object.username = $( '#form-operator-username' ).val();
 			object.password = $( '#form-operator-password' ).val();
 			object.tipe = $( '#form-operator-tipe' ).val();
-			object.lokasi = $( '#form-operator-lokasi' ).val();
 			object.deskripsi = $( '#form-operator-deskripsi' ).val();
-			
+			object.skpd = storage.getByNama( skpd, $( '#form-operator-lokasi' ).val() );
 				
 			return object;
 		
@@ -512,11 +510,13 @@ var operatorAbsen = {
 		},
 		
 		resetForm: function( obj ) {
+			
+			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
 
 			$( '#form-operator-username' ).val( obj.username );
 			$( '#form-operator-password' ).val( obj.password );
 			$( '#form-operator-tipe' ).val( obj.tipe );
-			$( '#form-operator-lokasi' ).val( obj.lokasi );
+			$( '#form-operator-lokasi' ).val( obj.skpd.nama );
 			$( '#form-operator-deskripsi' ).val( obj.deskripsi );
 			
 			operatorAbsen.currentObject = obj;
@@ -838,7 +838,6 @@ var otentikasi = {
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="otentikasi.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-otentikasi">Detail</button>' +
-					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -947,7 +946,12 @@ var pegawai = {
 		nama: '',
 		golongan: '',
 		jabatan: '',
-		bagian: ''
+		bagian: {
+			nama: '',
+			skpd: {
+				nama: ''
+			}
+		}
 	},
 	
 	currentObject: null,
@@ -1024,7 +1028,6 @@ var pegawai = {
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
 					'<button type="button" class="btn btn-danger" onclick="pegawai.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</button>' +
-					'<button type="button" class="btn btn-danger" onclick="">Hapus</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -1052,9 +1055,6 @@ var pegawai = {
 		},
 		
 		setDetail: function( nip ) {
-		
-			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
-			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 
 			var obj = storage.getByNip( pegawai, nip );
 			
@@ -1063,6 +1063,9 @@ var pegawai = {
 		},
 		
 		resetForm: function( obj ) {
+		
+			page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
+			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 
 			$( '#form-pegawai-nip' ).val( obj.nip );
 			$( '#form-pegawai-nama' ).val( obj.nama );
