@@ -640,6 +640,19 @@ var absen = {
 	},
 
 	loader: {
+		
+		loadSearch: function( keyword ) {
+		
+			var onSuccess = function( result ) {
+			
+				var list = page.list.get( result );
+				absen.load( list );
+				
+			};
+			
+			rest.call( '/absen/search/' + keyword, '', 'GET', onSuccess, message.error );
+			
+		},
 
 		loadByNip: function( nip, tanggalAwal, tanggalAkhir ) {
 			
