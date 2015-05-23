@@ -195,8 +195,8 @@ var skpd = {
 		
 		resetForm: function( obj ) {
 
-			$( '#form-skpd-kode' ).val( obj.username );
-			$( '#form-skpd-nama' ).val( obj.password );
+			$( '#form-skpd-kode' ).val( obj.kode );
+			$( '#form-skpd-nama' ).val( obj.nama );
 			
 			skpd.currentObject = obj;
 		
@@ -1081,6 +1081,19 @@ var pegawai = {
 	},
 	
 	loader: {
+		
+		loadSearch: function( keyword ) {
+		
+			var onSuccess = function( result ) {
+			
+				var list = page.list.get( result );
+				pegawai.load( list );
+				
+			};
+			
+			rest.call( '/pegawai/search/' + keyword, '', 'GET', onSuccess, message.error );
+			
+		},
 
 		loadByIdabsen: function( id ) {
 		

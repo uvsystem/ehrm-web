@@ -485,27 +485,27 @@
 		
 		if ( halaman == pegawai.nama ) {
 		
-			message.writeLog( 'Cari pegawai' );
+			pegawai.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == operatorAbsen.nama ) {
 		
-			operatorAbsen.loader.loadByUsername( kataKunci );
+			operatorAbsen.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == otentikasi.nama ) {
 		
-			message.writeLog( 'Cari otentikasi' );
+			otentikasi.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == absen.nama ) {
 		
-			message.writeLog( 'Cari absen' );
+			absen.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == skpd.nama ) {
 		
-			message.writeLog( 'Cari absen' );
+			skpd.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == bagian.nama ) {
 		
-			message.writeLog( 'Cari absen' );
+			bagian.loader.loadSearch( kataKunci );
 			
 		} else {
 
