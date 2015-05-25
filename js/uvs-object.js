@@ -1006,6 +1006,22 @@ var pegawai = {
 		rest.call( url, null, 'GET', onSuccess, message.error );
 		
 	},
+	
+	getListNip: function() {
+		
+		var list = storage.get( pegawai.nama );
+		var listNip = [];
+		
+		for ( var index = 0; index < list.length; index++ ) {
+			
+			var tmp = list[ index ];
+			
+			listNip[ index ] = tmp.nip;
+			
+		}
+		
+		return listNip;
+	},
 
 	content: {
 

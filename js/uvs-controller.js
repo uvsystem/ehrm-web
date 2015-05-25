@@ -242,6 +242,8 @@
 		$( '#form-absen-siang' ).val( '' );
 		$( '#form-absen-sore' ).val( '' );
 		
+		page.change( $( '#list-nip' ), pegawai.getListNip() );
+		
 	} );
 	
 	$( document ).on( 'click', '#btn-absen-simpan', function() {
