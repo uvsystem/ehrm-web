@@ -287,6 +287,10 @@
 		$( '#form-absen-sakit-tanggal' ).val( '' );
 		$( '#form-absen-sakit-keterangan' ).val( '' );
 		
+		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
+		
+		page.change( $( '#list-nip' ), daftarNip );
+		
 	} );
 
 	$( document ).on( 'click', '#btn-absen-sakit-simpan', function() {
@@ -308,6 +312,10 @@
 		$( '#form-absen-izin-tanggal' ).val( '' );
 		$( '#form-absen-izin-keterangan' ).val( '' );
 		
+		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
+		
+		page.change( $( '#list-nip' ), daftarNip );
+		
 	} );
 
 	$( document ).on( 'click', '#btn-absen-izin-simpan', function() {
@@ -328,6 +336,10 @@
 		$( '#form-absen-cuti-nip' ).val( '' );
 		$( '#form-absen-cuti-tanggal' ).val( '' );
 		$( '#form-absen-cuti-keterangan' ).val( '' );
+		
+		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
+		
+		page.change( $( '#list-nip' ), daftarNip );
 		
 	} );
 
@@ -390,7 +402,6 @@
 		var nip = $( '#form-absen-nip' ).val();
 		
 		var tmp = pegawai.getByNip( nip );
-		
 		
 		$( '#form-absen-nama' ).val( tmp.nama );
 		
