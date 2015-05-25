@@ -871,6 +871,23 @@ var page = {
 				
 			},
 			
+			generateNip: function ( list ) {
+
+				var html = '';
+				
+				if ( list ) {
+
+					for( var index = 0; index < list.length; index++ ) {
+
+						var tmp = list[ index ];
+						html += '<option>' + tmp.nip + '</option>';
+					}
+				}
+				
+				return html;
+				
+			},
+			
 			generateFromStorage: function( storageName ) {
 				
 				var list = storage.get( storageName );

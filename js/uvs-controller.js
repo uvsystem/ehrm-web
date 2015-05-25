@@ -237,12 +237,14 @@
 		
 		$( '#form-absen-nip' ).val( '' );
 		$( '#form-absen-tanggal' ).val( '' );
-		$( '#form-absen-pagi' ).val( '' );
-		$( '#form-absen-tengah' ).val( '' );
-		$( '#form-absen-siang' ).val( '' );
-		$( '#form-absen-sore' ).val( '' );
+		$( '#form-absen-pagi' ).val( '7:30' );
+		$( '#form-absen-tengah' ).val( '11:30' );
+		$( '#form-absen-siang' ).val( '13:00' );
+		$( '#form-absen-sore' ).val( '16:00' );
 		
-		page.change( $( '#list-nip' ), pegawai.getListNip() );
+		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
+		
+		page.change( $( '#list-nip' ), daftarNip );
 		
 	} );
 	
@@ -383,6 +385,16 @@
 		}
 	} );
 
+	$( document ).on( 'change', '#form-absen-nip', function() {
+		
+		var nip = $( '#form-absen-nip' ).val();
+		
+		var tmp = pegawai.getByNip( nip );
+		
+		
+		$( '#form-absen-nama' ).val( tmp.nama );
+		
+	} );
 
 
 	// Otentikasi handler.

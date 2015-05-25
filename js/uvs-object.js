@@ -1022,6 +1022,23 @@ var pegawai = {
 		
 		return listNip;
 	},
+	
+	getByNip: function( nip ) {
+
+		var listPegawai = storage.get( pegawai.nama );
+		
+		for ( var index = 0; index < listPegawai.length; index++ ) {
+			
+			var tmp = listPegawai[ index ];
+			
+			message.writeLog( tmp.nip + ' : ' + ( tmp.nip == nip ) );
+			
+			if ( tmp.nip == nip)
+				return tmp;
+		}
+		
+		return { nama: 'Tidak terdaftar' };
+	},
 
 	content: {
 
