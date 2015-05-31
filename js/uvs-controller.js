@@ -538,4 +538,88 @@
 			
 		}
 	} );
+	
+	// Rekap Handler
+	$( document ).on( 'click', '#btn-rekap-bagian', function() {
+
+		var listSkpd = storage.get( skpd.nama );
+		var listBagian = storage.get( bagian.nama );
+		
+		page.change( $( '#list-skpd' ), page.list.option.generate( listSkpd ) );
+		page.change( $( '#list-bagian' ), page.list.option.generate( listBagian ) );
+
+		$( '#form-bagian-skpd' ).val( '' );
+		$( '#form-bagian-bagian' ).val( '' );
+	});
+	
+	$( document ).on( 'click', '#btn-rekap-skpd', function() {
+
+		var listSkpd = storage.get( skpd.nama );
+		page.change( $( '#list-skpd' ), page.list.option.generate( listSkpd ) );
+		
+		$( '#form-skpd-skpd' ).val( '' );
+	});
+	
+	$( document ).on( 'change', '#form-bagian-skpd', function() {
+
+		var namaSkpd = $( '#form-bagian-skpd' ).val();
+		var _skpd = storage.getByNama( skpd, namaSkpd );
+		
+		var onSuccess = function( result ) {
+			
+			if ( result.tipe == 'LIST' )
+				page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
+		};
+		
+		rest.call( '/bagian/skpd/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
+		
+	});
+	
+	$( document ).on( 'click', '#btn-cetak-rekap-bagian', function() {
+
+		var namaBagian = $( '#form-bagian-bagian' ).val();
+		var tanggalAwal = $( '#form-bagian-tanggal-awal' ).val();
+		var tanggalAkhir = $( '#form-bagian-tanggal-akhir' ).val();
+
+		var formattedAwal = myDate.fromDatePicker( tanggalAwal );
+		var formattedAkhir = myDate.fromDatePicker( tanggalAkhir );
+
+		var _bagian = storage.getByNama( bagian, namaBagian );
+		var firstDate = myDate.toFormattedString( formattedAwal );
+		var lastDate = myDate.toFormattedString( formattedAkhir );
+		
+		printer.submitPost( '/pegawai/print/rekap/bagian/' + _bagian.id + '/' + firstDate + '/' + lastDate, [], 'GET' );	
+		
+	});
+	
+	$( document ).on( 'click', '#btn-cetak-rekap-skpd', function() {
+
+		var namaSkpd = $( '#form-skpd-skpd' ).val();
+		var tanggalAwal = $( '#form-skpd-tanggal-awal' ).val();
+		var tanggalAkhir = $( '#form-skpd-tanggal-akhir' ).val();
+
+		var formattedAwal = myDate.fromDatePicker( tanggalAwal );
+		var formattedAkhir = myDate.fromDatePicker( tanggalAkhir );
+		
+		var _skpd = storage.getByNama( skpd, namaSkpd );
+		var firstDate = myDate.toFormattedString( formattedAwal );
+		var lastDate = myDate.toFormattedString( formattedAkhir );
+		
+		printer.submitPost( '/pegawai/print/rekap/skpd/' + _skpd.id + '/' + firstDate + '/' + lastDate, [], 'GET' );	
+		
+	});
+	
+	// Alert auto-close
+	$("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+	    $("#success-alert").alert('close');
+	});
+	
+	$("#warning-alert").fadeTo(2000, 500).slideUp(500, function(){
+	    $("#success-alert").alert('close');
+	});
+	
+	$("#error-alert").fadeTo(2000, 500).slideUp(500, function(){
+	    $("#success-alert").alert('close');
+	});
+	
 } );

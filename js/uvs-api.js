@@ -15,7 +15,7 @@ var myUrl = {
 	
 	apiHost: 'core-unitedvision.whelastic.net',
 	
-	printHost: this.apiHost,
+	printHost: 'core-unitedvision.whelastic.net',
 	
 	apiProject: 'absensi',
 	
@@ -72,7 +72,7 @@ var message = {
 		
 			case "SUCCESS": console.log( "Proses SUCCESS" );
 					page.change( $( '#message' ), 
-						'<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
 					// alert( 'Berhasil' );
 				break;
 			case "ENTITY": console.log( "Entity Set" );
@@ -81,16 +81,16 @@ var message = {
 				break;
 			case "OBJECT": console.log( "Object Set" );
 					page.change( $( '#message' ), 
-						'<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
 				break;
 			case "MESSAGE": 
 					page.change( $( '#message' ), 
-						'<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
+						'<div id="warning-alert" class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
 					// alert( result.message );
 				break;
 			case "ERROR": 
 					page.change( $( '#message' ), 
-						'<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
+						'<div id="error-alert" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
 					// alert( result.message );
 				break;
 			default: console.log( "Tipe result tidak dikenali : " + result.tipe );

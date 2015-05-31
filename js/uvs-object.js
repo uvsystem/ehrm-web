@@ -1031,7 +1031,7 @@ var pegawai = {
 			
 			var tmp = listPegawai[ index ];
 			
-			message.writeLog( tmp.nip + ' : ' + ( tmp.nip == nip ) );
+			message.writeLog( tmp.nip + ': ' + ( tmp.nip == nip ) );
 			
 			if ( tmp.nip == nip)
 				return tmp;
