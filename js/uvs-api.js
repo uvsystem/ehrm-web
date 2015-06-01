@@ -717,7 +717,8 @@ var page = {
 			getPegawai: function() {
 				
 				return '<li class="divider"><hr /></li>' +
-					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-shopping-cart big-icon"></span><b class="icon-text">Absensi</b></a></li>';
+					'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-shopping-cart big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
+					'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>';
 				
 			}
 		},
