@@ -727,6 +727,8 @@ var absen = {
 
 			if ( !list )
 				list = [ ];
+			
+			storage.set( list, absen.nama );
 	
 			activeContainer = absen;
 			activeContainer.list = list;
@@ -748,8 +750,19 @@ var absen = {
 					'<td>' + tmp.tengahStr + '</td>' +
 					'<td>' + tmp.siangStr + '</td>' +
 					'<td>' + tmp.soreStr + '</td>' +
-					'<td>' + ( !tmp.keterangan ? '' : tmp.keterangan ) + '</td>' +
-					'</tr>';
+					'<td>' + ( !tmp.keterangan ? '' : tmp.keterangan ) + '</td>';
+				
+					if ( operator.getRole() == 'ADMIN' && tmp.status == 'HADIR' ) {
+						html += '<td>' +
+						'<div class="btn-group btn-group-xs">' +
+						'<button type="button" class="btn btn-danger" onclick="absen.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-absen">Detail</button>' +
+						'</div>' +
+						'</td>';
+					} else {
+						html += '<td>&nbsp</td>';
+					}
+					
+					html += '</tr>';
 			}
 			
 			page.change( $( '#table' ), html );
@@ -758,15 +771,21 @@ var absen = {
 
 		setDetail: function( id ) {
 
-			message.writeLog( 'Tidak didukung' );
-			//var obj = storage.getById( absen, id );
+			var obj = storage.getById( absen, id );
 
-			//this.resetForm( obj );
+			this.resetForm( obj );
 
 		},
 	
 		resetForm: function( obj ) {
-			message.writeLog( 'Tidak didukung' );
+			
+			$( '#form-absen-nip' ).val( obj.pegawai.nip );
+			$( '#form-absen-nama' ).val( obj.pegawai.nama );
+			$( '#form-absen-tanggal' ).val( obj.tanggal );
+			$( '#form-absen-pagi' ).val( obj.pagiStr );
+			$( '#form-absen-tengah' ).val( obj.tengahStr);
+			$( '#form-absen-siang' ).val( obj.siangStr );
+			$( '#form-absen-sore' ).val( obj.soreStr );
 		}
 		
 	}
