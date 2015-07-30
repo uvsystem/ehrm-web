@@ -12,7 +12,9 @@
  * Version: 1.0.0
  */
 
- $( document ).ready( function () {
+var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
+ 
+$( document ).ready( function () {
 
 	if ( operator.isLogin() == false ) {
 		
@@ -116,7 +118,7 @@
 
 	$( document ).on( 'click', '#nav-logout', function() {
 		
-		rest.logout();
+		restAdapter.logout();
 
 	} );
 
