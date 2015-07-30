@@ -43,7 +43,6 @@ $( document ).ready( function () {
 	page.setName( 'HOME' );
 	
 	navigation( operator.getUsername() == 'ADMIN' ? 'ADMIN' : operator.getRole() );
-	menu( operator.getUsername() == 'ADMIN' ? 'ADMIN' : operator.getRole() );
 
 	$( function () {
 	
@@ -622,25 +621,31 @@ $( document ).ready( function () {
 function navigation( role ) {
 	if ( role == "ADMIN" ) {
 		
-		alert( 'admin' );
-		
+		return '' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="Unit Kerja"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Unit Kerja</b></a></li>' +
+			'<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
+			'<li><a id="menu-pegawai" href="#" data-toggle="tooltip" data-placement="right" title="Pegawai"><span class="glyphicon glyphicon-user big-icon"></span><b class="icon-text">Pegawai</b></a></li>' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +
+			'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
+			'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>';
+
 	} else if ( role == "OPERATOR" ) {
 		
-		alert( 'operator' );
-
-	} else {
-		throw new Error( "Role: '" + role + "' is unknown" );
-	}
-};
-
-function menu( role ) {
-	if ( role == "ADMIN" ) {
-		
-		alert( 'admin' );
-		
-	} else if ( role == "OPERATOR" ) {
-		
-		alert( 'operator' );
+		return '' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="Unit Kerja"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Unit Kerja</b></a></li>' +
+			'<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
+			'<li><a id="menu-pegawai" href="#" data-toggle="tooltip" data-placement="right" title="Pegawai"><span class="glyphicon glyphicon-user big-icon"></span><b class="icon-text">Pegawai</b></a></li>' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
+			'<li class="divider"><hr /></li>' +
+			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +
+			'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
+			'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>';
 
 	} else {
 		throw new Error( "Role: '" + role + "' is unknown" );
