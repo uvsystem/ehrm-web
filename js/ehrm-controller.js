@@ -1,4 +1,7 @@
-/* UnitedVision. 2015
+/**
+ * eHRM-Controller.js
+ *
+ * UnitedVision. 2015
  * Manado, Indonesia.
  * dkakunsi.unitedvision@gmail.com
  * 
@@ -6,7 +9,7 @@
  * Manado, Indonesia.
  * deddy.kakunsi@gmail.com | deddykakunsi@outlook.com
  * 
- * Version: 1.1.0
+ * Version: 1.0.0
  */
 
  $( document ).ready( function () {
@@ -18,22 +21,27 @@
 		
 	}
 	
-	if ( operator.getRole() != 'ADMIN' && operator.getRole() != 'PEGAWAI' ) {
+	if ( operator.getTokenString == '********' && operator.getPegawai() ) {
 		
-		message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
-		
-		window.location.href = 'login.html';
-		return;
+		if ( ( operator.getRole() != 'ADMIN' && operator.getRole() != 'PEGAWAI' ) ) {
+			
+			message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
+			message.writeLog( 'Maaf, anda tidak bisa mengakses halaman ini' ); // LOG
+			
+			//window.location.href = 'login.html';
+			return;
+			
+		}
 		
 	}
 	
-	page.content.navigation.set();
-	page.content.menu.set();
-	page.content.home.set();
-
 	storage.reset();
 
 	page.change( $( '#operator-nama' ), operator.getUsername() );
+	page.setName( 'HOME' );
+	
+	navigation( operator.getUsername() == 'ADMIN' ? 'ADMIN' : operator.getRole() );
+	menu( operator.getUsername() == 'ADMIN' ? 'ADMIN' : operator.getRole() );
 
 	$( function () {
 	
@@ -47,21 +55,7 @@
 	$( document ).on( 'click', '#menu-skpd', function() {
 
 		page.change( $( '#message' ), '');
-		skpd.reload();
-
-	} );
-
-	$( document ).on( 'click', '#menu-bagian', function() {
-
-		page.change( $( '#message' ), '');
-		bagian.reload();
-
-	} );
-
-	$( document ).on( 'click', '#menu-operator', function() {
-
-		page.change( $( '#message' ), '');
-		operatorAbsen.reload();
+		unitKerjaDomain.reload();
 
 	} );
 
@@ -70,14 +64,6 @@
 		page.change( $( '#message' ), '');
 		pegawai.reload();
 
-	} );
-
-	$( document ).on( 'click', '#menu-otentikasi', function() {
-		
-		message.write("Maaf, belum tersedia");
-		page.change( $( '#message' ), '');
-		//otentikasi.reload();
-		
 	} );
 
 	$( document ).on( 'click', '#menu-rekap', function() {
@@ -90,7 +76,14 @@
 	$( document ).on( 'click', '#menu-absensi', function() {
 		
 		page.change( $( '#message' ), '');
-		absen.reload();
+		absenDomain.reload();
+
+	} );
+
+	$( document ).on( 'click', '#menu-sppd', function() {
+		
+		page.change( $( '#message' ), '');
+		sppdDomain.reload();
 
 	} );
 
@@ -113,7 +106,7 @@
 		
 		} else if ( operator.getRole() == 'PEGAWAI' ) {
 			
-			todo = absen.reload;
+			todo = absenDomain.reload;
 			
 		}
 		
@@ -148,7 +141,7 @@
 
 	$( document ).on( 'click', '#nav-absensi', function() {
 		
-		absen.reload();
+		absenDomain.reload();
 
 	} );
 
@@ -192,20 +185,20 @@
 	
 	
 	// SKPD Handler
-	$( document ).on( 'click', '#btn-skpd-tambah', function() {
+	$( document ).on( 'click', '#btn-unitKerjaDomain-tambah', function() {
 	
-		$( '#form-skpd-kode' ).val( '' );
-		$( '#form-skpd-nama' ).val( '' );
+		$( '#form-unitKerjaDomain-kode' ).val( '' );
+		$( '#form-unitKerjaDomain-nama' ).val( '' );
 
 	} );
 	
-	$( document ).on( 'click', '#btn-simpan-skpd', function() {
+	$( document ).on( 'click', '#btn-simpan-unitKerjaDomain', function() {
 
-		var object = skpd.content.getObject();
+		var object = unitKerjaDomain.content.getObject();
 
-		rest.call( '/skpd', object, 'POST', skpd.success, message.error );
+		rest.call( '/unitKerjaDomain', object, 'POST', unitKerjaDomain.success, message.error );
 		
-		skpd.currentObject = null;
+		unitKerjaDomain.currentObject = null;
 
 	} );
 	
@@ -214,9 +207,9 @@
 	
 		$( '#form-bagian-kode' ).val( '' );
 		$( '#form-bagian-nama' ).val( '' );
-		$( '#form-bagian-skpd' ).val( '' );
+		$( '#form-bagian-unitKerjaDomain' ).val( '' );
 
-		page.change( $( '#list-skpd' ), page.list.option.generateFromStorage( skpd.nama ) );
+		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
 		
 	} );
 	
@@ -233,14 +226,14 @@
 
 
 	// Absen handler.
-	$( document ).on( 'click', '#btn-absen-tambah', function() {
+	$( document ).on( 'click', '#btn-absenDomain-tambah', function() {
 		
-		$( '#form-absen-nip' ).val( '' );
-		$( '#form-absen-tanggal' ).val( '' );
-		$( '#form-absen-pagi' ).val( '7:30' );
-		$( '#form-absen-tengah' ).val( '11:30' );
-		$( '#form-absen-siang' ).val( '13:00' );
-		$( '#form-absen-sore' ).val( '16:00' );
+		$( '#form-absenDomain-nip' ).val( '' );
+		$( '#form-absenDomain-tanggal' ).val( '' );
+		$( '#form-absenDomain-pagi' ).val( '7:30' );
+		$( '#form-absenDomain-tengah' ).val( '11:30' );
+		$( '#form-absenDomain-siang' ).val( '13:00' );
+		$( '#form-absenDomain-sore' ).val( '16:00' );
 		
 		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
 		
@@ -248,9 +241,9 @@
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absen-simpan', function() {
+	$( document ).on( 'click', '#btn-absenDomain-simpan', function() {
 		
-		var nip = $( '#form-absen-nip' ).val();
+		var nip = $( '#form-absenDomain-nip' ).val();
 		
 		var loadPegawai = function( result ) {
 			
@@ -258,11 +251,11 @@
 
 				var _pegawai = result.object;
 			
-				var tanggal = myDate.fromDatePicker( $( '#form-absen-tanggal' ).val() );
-				var pagi = $( '#form-absen-pagi' ).val();
-				var tengah = $( '#form-absen-tengah' ).val();
-				var siang = $( '#form-absen-siang' ).val();
-				var sore = $( '#form-absen-sore' ).val();
+				var tanggal = myDate.fromDatePicker( $( '#form-absenDomain-tanggal' ).val() );
+				var pagi = $( '#form-absenDomain-pagi' ).val();
+				var tengah = $( '#form-absenDomain-tengah' ).val();
+				var siang = $( '#form-absenDomain-siang' ).val();
+				var sore = $( '#form-absenDomain-sore' ).val();
 				
 				var _absen = {
 					pegawai: _pegawai,
@@ -273,7 +266,7 @@
 					sore: sore
 				};
 				
-				rest.call( '/absen', _absen, 'POST', absen.success, message.error );
+				rest.call( '/absenDomain', _absen, 'POST', absenDomain.success, message.error );
 			}
 		};
 		
@@ -281,11 +274,11 @@
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absen-sakit', function() {
+	$( document ).on( 'click', '#btn-absenDomain-sakit', function() {
 	
-		$( '#form-absen-sakit-nip' ).val( '' );
-		$( '#form-absen-sakit-tanggal' ).val( '' );
-		$( '#form-absen-sakit-keterangan' ).val( '' );
+		$( '#form-absenDomain-sakit-nip' ).val( '' );
+		$( '#form-absenDomain-sakit-tanggal' ).val( '' );
+		$( '#form-absenDomain-sakit-keterangan' ).val( '' );
 		
 		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
 		
@@ -293,24 +286,24 @@
 		
 	} );
 
-	$( document ).on( 'click', '#btn-absen-sakit-simpan', function() {
+	$( document ).on( 'click', '#btn-absenDomain-sakit-simpan', function() {
 		
-		var nip = $( '#form-absen-sakit-nip' ).val();
-		var keterangan = $( '#form-absen-sakit-keterangan' ).val();
-		var tanggal = myDate.fromDatePicker( $( '#form-absen-sakit-tanggal' ).val() );
+		var nip = $( '#form-absenDomain-sakit-nip' ).val();
+		var keterangan = $( '#form-absenDomain-sakit-keterangan' ).val();
+		var tanggal = myDate.fromDatePicker( $( '#form-absenDomain-sakit-tanggal' ).val() );
 		
-		var url = '/absen/sakit/' + nip + '/' + myDate.toFormattedString( tanggal );
+		var url = '/absenDomain/sakit/' + nip + '/' + myDate.toFormattedString( tanggal );
 		var object = { keterangan: keterangan };
 		
-		rest.call( url, object, 'POST', absen.success, message.error );
+		rest.call( url, object, 'POST', absenDomain.success, message.error );
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absen-izin', function() {
+	$( document ).on( 'click', '#btn-absenDomain-izin', function() {
 	
-		$( '#form-absen-izin-nip' ).val( '' );
-		$( '#form-absen-izin-tanggal' ).val( '' );
-		$( '#form-absen-izin-keterangan' ).val( '' );
+		$( '#form-absenDomain-izin-nip' ).val( '' );
+		$( '#form-absenDomain-izin-tanggal' ).val( '' );
+		$( '#form-absenDomain-izin-keterangan' ).val( '' );
 		
 		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
 		
@@ -318,24 +311,24 @@
 		
 	} );
 
-	$( document ).on( 'click', '#btn-absen-izin-simpan', function() {
+	$( document ).on( 'click', '#btn-absenDomain-izin-simpan', function() {
 		
-		var nip = $( '#form-absen-izin-nip' ).val();
-		var keterangan = $( '#form-absen-izin-keterangan' ).val();
-		var tanggal = myDate.fromDatePicker( $( '#form-absen-izin-tanggal' ).val() );
+		var nip = $( '#form-absenDomain-izin-nip' ).val();
+		var keterangan = $( '#form-absenDomain-izin-keterangan' ).val();
+		var tanggal = myDate.fromDatePicker( $( '#form-absenDomain-izin-tanggal' ).val() );
 		
-		var url = '/absen/izin/' + nip + '/' + myDate.toFormattedString( tanggal );
+		var url = '/absenDomain/izin/' + nip + '/' + myDate.toFormattedString( tanggal );
 		var object = { keterangan: keterangan };
 		
-		rest.call( url, object, 'POST', absen.success, message.error );
+		rest.call( url, object, 'POST', absenDomain.success, message.error );
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absen-cuti', function() {
+	$( document ).on( 'click', '#btn-absenDomain-cuti', function() {
 	
-		$( '#form-absen-cuti-nip' ).val( '' );
-		$( '#form-absen-cuti-tanggal' ).val( '' );
-		$( '#form-absen-cuti-keterangan' ).val( '' );
+		$( '#form-absenDomain-cuti-nip' ).val( '' );
+		$( '#form-absenDomain-cuti-tanggal' ).val( '' );
+		$( '#form-absenDomain-cuti-keterangan' ).val( '' );
 		
 		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
 		
@@ -343,23 +336,23 @@
 		
 	} );
 
-	$( document ).on( 'click', '#btn-absen-cuti-simpan', function() {
+	$( document ).on( 'click', '#btn-absenDomain-cuti-simpan', function() {
 		
-		var nip = $( '#form-absen-cuti-nip' ).val();
-		var keterangan = $( '#form-absen-cuti-keterangan' ).val();
-		var tanggal = myDate.fromDatePicker( $( '#form-absen-cuti-tanggal' ).val() );
+		var nip = $( '#form-absenDomain-cuti-nip' ).val();
+		var keterangan = $( '#form-absenDomain-cuti-keterangan' ).val();
+		var tanggal = myDate.fromDatePicker( $( '#form-absenDomain-cuti-tanggal' ).val() );
 		
-		var url = '/absen/cuti/' + nip + '/' + myDate.toFormattedString( tanggal );
+		var url = '/absenDomain/cuti/' + nip + '/' + myDate.toFormattedString( tanggal );
 		var object = { keterangan: keterangan };
 		
-		rest.call( url, object, 'POST', absen.success, message.error );
+		rest.call( url, object, 'POST', absenDomain.success, message.error );
 		
 	} );
 	
-	$( document ).on( 'change', '#absen-skpd', function() {
+	$( document ).on( 'change', '#absenDomain-unitKerjaDomain', function() {
 		
-		var namaSkpd = $( '#absen-skpd' ).val();
-		var _skpd = storage.getByNama( skpd, namaSkpd );
+		var namaSkpd = $( '#absenDomain-unitKerjaDomain' ).val();
+		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
 		
 		var onSuccess = function( result ) {
 			
@@ -367,43 +360,43 @@
 				page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
 		};
 		
-		rest.call( '/bagian/skpd/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
+		rest.call( '/bagian/unitKerjaDomain/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
 		
 	} );
 	
-	$( document ).on( 'click', '#absen-cari', function() {
+	$( document ).on( 'click', '#absenDomain-cari', function() {
 		
-		var namaBagian = $( '#absen-bagian' ).val();
-		var namaSkpd = $( '#absen-skpd' ).val();
-		var tanggalAwal = myDate.fromDatePicker( $( '#absen-tanggal-awal' ).val() );
-		var tanggalAkhir = myDate.fromDatePicker( $( '#absen-tanggal-akhir' ).val() );
+		var namaBagian = $( '#absenDomain-bagian' ).val();
+		var namaSkpd = $( '#absenDomain-unitKerjaDomain' ).val();
+		var tanggalAwal = myDate.fromDatePicker( $( '#absenDomain-tanggal-awal' ).val() );
+		var tanggalAkhir = myDate.fromDatePicker( $( '#absenDomain-tanggal-akhir' ).val() );
 
 		if ( namaBagian || namaBagian != '' ) {
 
 			var _bagian = storage.getByNama( bagian, namaBagian );
 		
-			rest.call( '/absen/bagian/' + _bagian.id + '/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absen.success, message.error );		
+			rest.call( '/absenDomain/bagian/' + _bagian.id + '/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absenDomain.success, message.error );		
 			
 		} else if ( namaSkpd || namaSkpd != '' ) {
 
-			var _skpd = storage.getByNama( skpd, namaSkpd );
+			var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
 				
-			rest.call( '/absen/skpd/' + _skpd.id + '/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absen.success, message.error );		
+			rest.call( '/absenDomain/unitKerjaDomain/' + _skpd.id + '/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absenDomain.success, message.error );		
 			
 		} else {
 				
-			rest.call( '/absen/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absen.success, message.error );		
+			rest.call( '/absenDomain/' + myDate.toFormattedString( tanggalAwal ) + '/' + myDate.toFormattedString( tanggalAkhir ), { }, 'GET', absenDomain.success, message.error );		
 			
 		}
 	} );
 
-	$( document ).on( 'change', '#form-absen-nip', function() {
+	$( document ).on( 'change', '#form-absenDomain-nip', function() {
 		
-		var nip = $( '#form-absen-nip' ).val();
+		var nip = $( '#form-absenDomain-nip' ).val();
 		
 		var tmp = pegawai.getByNip( nip );
 		
-		$( '#form-absen-nama' ).val( tmp.nama );
+		$( '#form-absenDomain-nama' ).val( tmp.nama );
 		
 	} );
 
@@ -470,17 +463,17 @@
 		
 	} );
 	
-	$( document ).on( 'change', '#form-pegawai-skpd', function() {
+	$( document ).on( 'change', '#form-pegawai-unitKerjaDomain', function() {
 		
-		var namaSkpd = $( '#form-pegawai-skpd' ).val();
-		var _skpd = storage.getByNama( skpd, namaSkpd );
+		var namaSkpd = $( '#form-pegawai-unitKerjaDomain' ).val();
+		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
 		
 		var onSuccess = function( result ) {
 		
 			page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
 		};
 		
-		rest.call( '/bagian/skpd/' + _skpd.id, {}, 'GET', onSuccess, message.error );
+		rest.call( '/bagian/unitKerjaDomain/' + _skpd.id, {}, 'GET', onSuccess, message.error );
 	} );
 	
 	
@@ -520,13 +513,13 @@
 		
 			otentikasi.loader.loadSearch( kataKunci );
 			
-		} else if ( halaman == absen.nama ) {
+		} else if ( halaman == absenDomain.nama ) {
 		
-			absen.loader.loadSearch( kataKunci );
+			absenDomain.loader.loadSearch( kataKunci );
 			
-		} else if ( halaman == skpd.nama ) {
+		} else if ( halaman == unitKerjaDomain.nama ) {
 		
-			skpd.loader.loadSearch( kataKunci );
+			unitKerjaDomain.loader.loadSearch( kataKunci );
 			
 		} else if ( halaman == bagian.nama ) {
 		
@@ -542,28 +535,28 @@
 	// Rekap Handler
 	$( document ).on( 'click', '#btn-rekap-bagian', function() {
 
-		var listSkpd = storage.get( skpd.nama );
+		var listSkpd = storage.get( unitKerjaDomain.nama );
 		var listBagian = storage.get( bagian.nama );
 		
-		page.change( $( '#list-skpd' ), page.list.option.generate( listSkpd ) );
+		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generate( listSkpd ) );
 		page.change( $( '#list-bagian' ), page.list.option.generate( listBagian ) );
 
-		$( '#form-bagian-skpd' ).val( '' );
+		$( '#form-bagian-unitKerjaDomain' ).val( '' );
 		$( '#form-bagian-bagian' ).val( '' );
 	});
 	
-	$( document ).on( 'click', '#btn-rekap-skpd', function() {
+	$( document ).on( 'click', '#btn-rekap-unitKerjaDomain', function() {
 
-		var listSkpd = storage.get( skpd.nama );
-		page.change( $( '#list-skpd' ), page.list.option.generate( listSkpd ) );
+		var listSkpd = storage.get( unitKerjaDomain.nama );
+		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generate( listSkpd ) );
 		
-		$( '#form-skpd-skpd' ).val( '' );
+		$( '#form-unitKerjaDomain-unitKerjaDomain' ).val( '' );
 	});
 	
-	$( document ).on( 'change', '#form-bagian-skpd', function() {
+	$( document ).on( 'change', '#form-bagian-unitKerjaDomain', function() {
 
-		var namaSkpd = $( '#form-bagian-skpd' ).val();
-		var _skpd = storage.getByNama( skpd, namaSkpd );
+		var namaSkpd = $( '#form-bagian-unitKerjaDomain' ).val();
+		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
 		
 		var onSuccess = function( result ) {
 			
@@ -571,7 +564,7 @@
 				page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
 		};
 		
-		rest.call( '/bagian/skpd/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
+		rest.call( '/bagian/unitKerjaDomain/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
 		
 	});
 	
@@ -601,7 +594,7 @@
 		var formattedAwal = myDate.fromDatePicker( tanggalAwal );
 		var formattedAkhir = myDate.fromDatePicker( tanggalAkhir );
 		
-		var _skpd = storage.getByNama( skpd, namaSkpd );
+		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
 		var firstDate = myDate.toFormattedString( formattedAwal );
 		var lastDate = myDate.toFormattedString( formattedAkhir );
 		
@@ -623,3 +616,31 @@
 	});
 	
 } );
+
+function navigation( role ) {
+	if ( role == "ADMIN" ) {
+		
+		alert( 'admin' );
+		
+	} else if ( role == "OPERATOR" ) {
+		
+		alert( 'operator' );
+
+	} else {
+		throw new Error( "Role: '" + role + "' is unknown" );
+	}
+};
+
+function menu( role ) {
+	if ( role == "ADMIN" ) {
+		
+		alert( 'admin' );
+		
+	} else if ( role == "OPERATOR" ) {
+		
+		alert( 'operator' );
+
+	} else {
+		throw new Error( "Role: '" + role + "' is unknown" );
+	}
+};
