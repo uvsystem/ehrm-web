@@ -60,7 +60,25 @@ var unitKerjaRestAdapter = {
 
 		ehrmRestAdapter.call( '/satker/' + id + '/sub', null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil unit kerja: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
+				callback( result );
+			},
+			message.error
+		);
+	},
+	
+	addSubUnit: function( kode, id, nama, tipe, singkatan, callback ) {
+
+		var unitKerja = {
+			id: id,
+			nama: nama,
+			tipe: tipe,
+			singkatan: singkatan,
+		};
+
+		ehrmRestAdapter.call( '/satker/' + kode + '/sub', unitKerja, 'POST',
+			function( result ) {
+				message.writeLog( "Mengambil unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -71,7 +89,7 @@ var unitKerjaRestAdapter = {
 
 		ehrmRestAdapter.call( '/satker/search/' + keyword, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mencari unit kerja: " + result.list.length ); // LOG
+				message.writeLog( "Mencari unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -82,7 +100,7 @@ var unitKerjaRestAdapter = {
 
 		ehrmRestAdapter.call( '/satker', null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil semua unit kerja: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil semua unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -136,7 +154,7 @@ var jabatanRestAdapter = {
 
 		ehrmRestAdapter.call( '/jabatan/satker/' + id, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil jabatan: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil jabatan: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -147,7 +165,7 @@ var jabatanRestAdapter = {
 
 		ehrmRestAdapter.call( '/jabatan/search/' + keyword, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mencari jabatan: " + result.list.length ); // LOG
+				message.writeLog( "Mencari jabatan: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -162,7 +180,7 @@ var pegawaiRestAdapter = {
 		var pegawai = {
 			id: id,
 			nip: nip,
-			password: password,
+			passwordStr: password,
 			nik: nik,
 			nama: nama,
 			tanggalLahirStr: tanggalLahir,
@@ -171,8 +189,11 @@ var pegawaiRestAdapter = {
 			idPenduduk: idPenduduk
 		};
 		
-		ehrmRestAdapter.call( '/pegawai/' + idSatuanKerja, pegawai, 'POST',
-			function( result ) {
+		var method = 'POST';
+		if ( id != 0 )
+			method = 'PUT';
+		
+		ehrmRestAdapter.call( '/pegawai/' + idSatuanKerja, pegawai, method, function( result ) {
 				callback( result );
 				message.writeLog( "Menyimpan pegawai: " + result.object ); // LOG
 			},
@@ -206,7 +227,7 @@ var pegawaiRestAdapter = {
 
 		ehrmRestAdapter.call( '/pegawai/satker/' + idSatuanKerja, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil pegawai: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil pegawai: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -217,7 +238,7 @@ var pegawaiRestAdapter = {
 
 		ehrmRestAdapter.call( '/pegawai/eselon/' + eselon, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil pegawai: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil pegawai: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -228,7 +249,7 @@ var pegawaiRestAdapter = {
 
 		ehrmRestAdapter.call( '/pegawai/search/' + keyword, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mencari pegawai: " + result.list.length ); // LOG
+				message.writeLog( "Mencari pegawai: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -246,9 +267,15 @@ var pegawaiRestAdapter = {
 		);
 	},
 	
-	promosiPangkat: function( nip, pangkat, callback ) {
+	promosiPangkat: function( nip, pangkat, nomorSk, tanggalMulai, tanggalSelesai, callback ) {
 
-		ehrmRestAdapter.call( '/pegawai/' + nip + '/pangkat/' + pangkat, null, 'POST',
+		var riwayat = {
+			nomorSk: nomorSk,
+			tanggalMulaiStr: tanggalMulai,
+			tanggalSelesaiStr: tanggalSelesai
+		};
+
+		ehrmRestAdapter.call( '/pegawai/' + nip + '/pangkat/' + pangkat, riwayat, 'POST',
 			function( result ) {
 				message.writeLog( "Promosi  pegawai  " + nip + " ke pangkat " + pangkat ); // LOG
 				callback( result );
@@ -268,9 +295,15 @@ var pegawaiRestAdapter = {
 		);
 	},
 	
-	promosiJabatan: function( nip, idJabatan, callback ) {
+	promosiJabatan: function( nip, idJabatan, nomorSk, tanggalMulai, tanggalSelesai, callback ) {
 
-		ehrmRestAdapter.call( '/pegawai/' + nip + '/jabatan/' + idJabatan, null, 'POST',
+		var riwayat = {
+			nomorSk: nomorSk,
+			tanggalMulaiStr: tanggalMulai,
+			tanggalSelesaiStr: tanggalSelesai
+		};
+	
+		ehrmRestAdapter.call( '/pegawai/' + nip + '/jabatan/' + idJabatan, riwayat, 'POST',
 			function( result ) {
 				message.writeLog( "Promosi  pegawai  " + nip + " ke jabatan " + jabatan ); // LOG
 				callback( result );
@@ -456,7 +489,7 @@ var kalendarRestAdapter = {
 
 		ehrmRestAdapter.call( '/kalendar/' + tanggalAwal + '/' + tanggalAkhir, null, 'GET',
 			function( result ) {
-				message.writeLog( "Mengambil kalendar: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil kalendar: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
 			},
 			message.error
@@ -512,7 +545,7 @@ var suratTugasRestAdapter = {
 		ehrmRestAdapter.call( '/suratTugas/pending', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil surat tugas pending: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil surat tugas pending: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -523,7 +556,7 @@ var suratTugasRestAdapter = {
 		ehrmRestAdapter.call( '/suratTugas/terima', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil surat tugas accepted: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil surat tugas accepted: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -534,7 +567,7 @@ var suratTugasRestAdapter = {
 		ehrmRestAdapter.call( '/suratTugas/tolak', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil surat tugas ignored: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil surat tugas ignored: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -545,7 +578,7 @@ var suratTugasRestAdapter = {
 		ehrmRestAdapter.call( '/suratTugas/' + nip, null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil surat tugas: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -569,7 +602,7 @@ var sppdRestAdapter = {
 		ehrmRestAdapter.call( '/sppd/' + nip + '/suratTugas/' + nomorSuratTugas, sppd, 'POST',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Menyimpan sppd: " + result.list.length ); // LOG
+				message.writeLog( "Menyimpan sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -597,7 +630,7 @@ var sppdRestAdapter = {
 		ehrmRestAdapter.call( '/sppd/' + nip, null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil sppd: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -651,7 +684,7 @@ var aplikasiRestAdapter = {
 		ehrmRestAdapter.call( '/aplikasi', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil aplikasi: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil aplikasi: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -673,7 +706,7 @@ var aplikasiRestAdapter = {
 		ehrmRestAdapter.call( '/aplikasi/' + kode + '/operator', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil operator: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil operator: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -706,7 +739,7 @@ var aplikasiRestAdapter = {
 		ehrmRestAdapter.call( '/aplikasi/' + kode + '/admin', null, 'GET',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Mengambil admin: " + result.list.length ); // LOG
+				message.writeLog( "Mengambil admin: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);

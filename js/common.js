@@ -43,19 +43,23 @@ var message = {
 		
 			case "SUCCESS": console.log( "Proses SUCCESS" );
 					page.change( $( '#message' ), 
-						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> ' + result.message + '</div>');
 				break;
 			case "ENTITY": console.log( "Entity Set" );
+					page.change( $( '#message' ), 
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> ' + result.message + '</div>');
 				break;
 			case "LIST": console.log( "List Set" );
+					page.change( $( '#message' ), 
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> ' + result.message + '</div>');
 				break;
 			case "OBJECT": console.log( "Object Set" );
 					page.change( $( '#message' ), 
-						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> Proses berhasil</div>');
+						'<div id="success-alert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Selamat!</strong> ' + result.message + '</div>');
 				break;
 			case "MESSAGE": 
 					page.change( $( '#message' ), 
-						'<div id="warning-alert" class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> ' + result.message + '</div>');
+						'<div id="warning-alert" class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Pesan!</strong> ' + result.message + '</div>');
 				break;
 			case "ERROR": 
 					page.change( $( '#message' ), 
@@ -598,6 +602,42 @@ var page = {
 
 var myDate = {
 
+	create: function( day, month, year ) {
+		
+		return {
+			day: day,
+			month: month,
+			year: year,
+			
+			getString: function() {
+				return this.day + "-" + this.month + "-" + this.year;
+			},
+			getFormattedString: function() {
+				return this.month + "-" + this.day + "-" + this.year;
+			},
+			getDatePickerString: function() {
+				return this.year + "-" + this.month + "-" + this.day;
+			},
+			getNumber: function() {
+				return this.year + this.month + this.day;
+			},
+			isBefore: function ( comparer ) {
+			
+				var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
+
+				return ( this.getNumber() < comparerNumber );
+				
+			},
+			isAfter: function ( comparer ) {
+			
+				var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
+				
+				return ( this.getNumber() > comparerNumber );
+				
+			}
+		};
+	},
+
 	//Months definiton
 	month: {
 
@@ -799,45 +839,28 @@ var myDate = {
 	},
 	
 	fromDate: function ( date ) {
-
-		return {
-			day: date.getDate(),
-			month: date.getMonth() + 1,
-			year: date.getFullYear()
-		};
+		return this.create( date.getDate(), date.getMonth() + 1, date.getFullYear() );
 	},
 	
 	fromDatePicker: function ( date ) {
-
 		var str = this.split( date );
-		
-		return {
-			day: str[ 2 ],
-			month: str[ 1 ],
-			year: str[ 0 ]
-		}
+		return this.create( str[2], str[1], str[0] );
 	},
 	
+	/**
+	 * Format: DD/mm/YYYY
+	 */
 	fromString: function(date) {
-
 		var str = this.split( date );
-		
-		return {
-			day: str[ 0 ],
-			month: str[ 1 ],
-			year: str[ 2 ]
-		}
+		return this.create( str[0], str[1], str[2] );
 	},
 	
+	/**
+	 * Format: MM/dd/YYYY
+	 */
 	fromFormattedString: function ( date ) {
-	
 		var str = this.split( date );
-		
-		return {
-			day: str[ 1 ],
-			month: str[ 0 ],
-			year: str[ 2 ]
-		};
+		return this.create( str[1], str[0], str[2] );
 	},
 	
 	toString: function ( date ) {
@@ -1074,14 +1097,13 @@ var storage = {
 
 	reset: function () {
 
-		this.fill ('Pegawai');
-		this.fill ('Operator');
-		this.fill ('Skpd');
-		this.fill ('Bagian');
+		this.fill ('Satker');
 
 	},
 
 	fill: function ( storageName ) {
+		
+		var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
 
 		var success = function( result ) {
 
@@ -1095,7 +1117,7 @@ var storage = {
 
 		var url = "/" + storageName.toLowerCase();
 		
-		rest.call( url, '', 'GET', success, message.empty );
+		restAdapter.call( url, '', 'GET', success, message.empty );
 	}
 };
 
@@ -1296,6 +1318,28 @@ var operator = {
 			
 		}
 
+		return pegawai.nip;
+
+	},
+		
+	/*
+	 * Mengambil nama dari pegawai yang berhasil login terakhir kali.
+	 * Sering digunakan untuk melakukan REST request.
+	 */
+	getName: function() {
+
+		var pegawai;
+		
+		try {
+			
+			pegawai = this.getPegawai();
+			
+		} catch ( e ) {
+			
+			throw e;
+			
+		}
+
 		return pegawai.nama;
 
 	},
@@ -1346,7 +1390,7 @@ var operator = {
 			var token = this.getToken();
 			var now = myDate.formatDate( new Date() );
 			var expire = myDate.fromString( token.expireStr );
-
+			
 			// Jika token sudah expire, maka user dianggap belum login
 			if ( myDate.isAfter( now, expire ) )
 				return false;
@@ -1354,7 +1398,8 @@ var operator = {
 			return true;
 				
 		} catch ( e ) {
-			
+
+			message.writeLog( e );
 			return false;
 			
 		}

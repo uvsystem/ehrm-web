@@ -58,6 +58,46 @@ var user = {
  */
 var aplikasiDomain = {
 	
+	nama: 'APLIKASI',
+	
+	currentObject: null,
+	
+	defaultObject: {},
+	
+	success: function( result ) {
+		
+	},
+	
+	reload: function() {
+		throw new Error( 'reload' );
+	},
+	
+	load: function( list ) {
+		
+	},
+	
+	content: {
+		
+		setData: function( list, pageNumber ) {
+			
+		},
+		
+		getContent: function( list ) {
+			
+		},
+		
+		getObject: function() {
+			
+		},
+		
+		setDetail: function( id ) {
+			
+		},
+		
+		resetForm: function( obj ) {
+			
+		}
+	}
 };
 
 
@@ -66,25 +106,17 @@ var aplikasiDomain = {
  */
 var unitKerjaDomain = {
 	
-	nama: 'UNIT KERJA',
-	
-	currentObject: null,
+	nama: 'SATKER',
+		
+	currentId: 0,
 
 	defaultObject: {
 		id: 0,
-		kode: 'DEFAULT',
-		nama: ''
+		singkatan: 'DEFAULT',
+		nama: '',
+		tipe: 'DINAS'
 	},
 
-	success: function ( result ) {
-
-		message.success( result );
-		
-		unitKerjaDomain.reload();
-		unitKerjaDomain.currentObject = null;
-
-	},
-	
 	reload: function() {
 
 		unitKerjaRestAdapter.all( function( result ) {
@@ -94,13 +126,14 @@ var unitKerjaDomain = {
 			
 			}
 		);
-
+		
 	},
 	
 	load: function( list ) {
 
 		page.setName( unitKerjaDomain.nama );
-		unitKerjaDomain.content.getContent();
+		page.load( $( '#content' ), 'html/satuan-kerja.html' );
+
 		unitKerjaDomain.content.setData( list );
 		
 	},
@@ -123,11 +156,12 @@ var unitKerjaDomain = {
 				var tmp = list[ index ];
 
 				html += '<tr>' +
-					'<td>' + tmp.kode + '</td>' +
+					'<td>' + tmp.singkatan + '</td>' +
 					'<td>' + tmp.nama + '</td>' +
+					'<td>' + tmp.tipe + '</td>' +
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
-					'<button type="button" class="btn btn-danger" onclick="unitKerjaDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-unitKerjaDomain">Detail</button>' +
+					'<button type="button" class="btn btn-danger" onclick="unitKerjaDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -137,41 +171,23 @@ var unitKerjaDomain = {
 			page.change( $( '#table' ), html );
 
 		},
-		
-		getContent: function( list ) {
-
-			page.load( $( '#content' ), 'html/satuan-kerja.html' );
-			
-		},
-
-		getObject: function() {
-		
-			var object = unitKerjaDomain.currentObject;
-			
-			if ( !object )
-				object = choose( null, unitKerjaDomain.defaultObject);
-
-			object.kode = $( '#form-skpd-kode' ).val();
-			object.nama = $( '#form-skpd-nama' ).val();
-							
-			return object;
-		
-		},
 
 		setDetail: function( id ) {
 
+			page.change( $( '#unitkerja-list' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'unitkerja-list' ) );
 			var obj = storage.getById( unitKerjaDomain, id );
+
+			if ( obj.parent )
+				$( '#form-skpd-parent' ).val( obj.parent.nama );
+			$( '#form-skpd-kode' ).val( obj.singkatan );
+			$( '#form-skpd-nama' ).val( obj.nama );
+			$( '#form-skpd-tipe' ).val( obj.tipe );
 			
-			this.resetForm( obj );
+			unitKerjaDomain.currentId = obj.id;
 			
 		},
 		
 		resetForm: function( obj ) {
-
-			$( '#form-skpd-kode' ).val( obj.kode );
-			$( '#form-skpd-nama' ).val( obj.nama );
-			
-			unitKerjaDomain.currentObject = obj;
 		
 		},		
 	}
@@ -194,7 +210,7 @@ var jabatanDomain = {
 	},
 	
 	reload: function() {
-		
+		throw new Error( 'reload' );
 	},
 	
 	load: function( list ) {
@@ -226,67 +242,56 @@ var jabatanDomain = {
 };
 
 /**
- * Definisi resources untuk pegawai.
+ * Definisi resources untuk pegawaiDomain.
  * Sangat tergantung pada variable page (api.js).
  */
-var pegawai = {
+var pegawaiDomain = {
 
 	nama: 'PEGAWAI',
 	
 	searchBy: '',
 	
 	defaultObject: {
+		id: 0,
 		nip: '',
+		password: '',
+		nik: '',
 		nama: '',
-		golongan: '',
-		jabatan: '',
-		bagian: {
-			nama: '',
-			unitKerjaDomain: {
-				nama: ''
-			}
-		}
+		tanggalLahirStr: '',
+		email: '',
+		telepon: '',
+		idPenduduk: 0
 	},
 	
-	currentObject: null,
-	
-	success: function ( result ) {
-
-		message.success( result );
-
-		pegawai.reload( );
-		pegawai.currentObject = null;
-		
+	currentId: 0,
+	currentIdPenduduk: 0,
+	currentIdUnitKerja: 0,
+	idSekretariatDaerah: function() {
+		var setda = storage.getByNama( unitKerjaDomain, 'Sekretariat Daerah');
+		return setda.id;
 	},
 
 	load: function( list ) {
 
-		page.setName( pegawai.nama );
+		page.setName( pegawaiDomain.nama );
 		
-		pegawai.content.getContent();
-		pegawai.content.setData( list );
+		page.load( $( '#content' ), 'html/pegawai.html' );
+		pegawaiDomain.content.setData( list );
 		
+		page.change( $( '#list-satker' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satker') );
 	},
 	
 	reload: function() {
-		
-		var onSuccess = function( result ) {
-		
-			pegawai.load( result.list );
-			
-			storage.set( result.list, pegawai.nama );
-		
-		};
-		
-		var url = '/pegawai';
 
-		rest.call( url, null, 'GET', onSuccess, message.error );
-		
+		pegawaiRestAdapter.findBySatker( pegawaiDomain.idSekretariatDaerah(), function( result ) {
+			pegawaiDomain.load( result.list );	
+			storage.set( result.list, pegawaiDomain.nama );
+		});
 	},
 	
 	getListNip: function() {
 		
-		var list = storage.get( pegawai.nama );
+		var list = storage.get( pegawaiDomain.nama );
 		var listNip = [];
 		
 		for ( var index = 0; index < list.length; index++ ) {
@@ -301,7 +306,7 @@ var pegawai = {
 	
 	getByNip: function( nip ) {
 
-		var listPegawai = storage.get( pegawai.nama );
+		var listPegawai = storage.get( pegawaiDomain.nama );
 		
 		for ( var index = 0; index < listPegawai.length; index++ ) {
 			
@@ -317,19 +322,13 @@ var pegawai = {
 	},
 
 	content: {
-
-		getContent: function() {
-
-			page.load( $( '#content' ), 'html/pegawai.html' );
-			
-		},
 		
 		setData: function( list, pageNumber ) {
 
 			if ( !list )
 				list = [ ];
 	
-			activeContainer = pegawai;
+			activeContainer = pegawaiDomain;
 			activeContainer.list = list;
 			
 			var firstLast = tableSet( list, pageNumber );
@@ -343,13 +342,13 @@ var pegawai = {
 				html += '<tr>' +
 					'<td>' + tmp.nip + '</td>' +
 					'<td>' + tmp.nama + '</td>' +
-					'<td>' + tmp.golongan + '</td>' +
-					'<td>' + tmp.jabatan + '</td>' +
-					'<td>' + ( !tmp.bagian.unitKerjaDomain ? '' : tmp.bagian.unitKerjaDomain.nama ) + '</td>' +
-					'<td>' + tmp.bagian.nama + '</td>' +
+					'<td>' + (tmp.unitKerja.parent ? tmp.unitKerja.nama + ' - ' + tmp.unitKerja.parent.nama : tmp.unitKerja.nama) + '</td>' +
 					'<td>' +
 					'<div class="btn-group btn-group-xs">' +
-					'<button type="button" class="btn btn-danger" onclick="pegawai.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</button>' +
+					'<button type="button" class="btn btn-danger" onclick="pegawaiDomain.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</button>' +
+					'<button type="button" class="btn btn-primary" onclick="pegawaiDomain.content.openMutasi(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-mutasi">Mutasi</button>' +
+					'<button type="button" class="btn btn-warning" onclick="pegawaiDomain.content.openPromosiPangkat(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-promosi-pangkat">Pangkat</button>' +
+					'<button type="button" class="btn btn-success" onclick="pegawaiDomain.content.openPromosiJabatan(' + tmp.id + ', ' + tmp.unitKerja.id + ')" data-toggle="modal" data-target="#modal-form-promosi-jabatan">Jabatan</button>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
@@ -359,49 +358,45 @@ var pegawai = {
 			page.change( $( '#table' ), html );
 
 		},
-
-		getObject: function() {
-		
-			var object = pegawai.currentObject;
-			
-			if ( !object )
-				object = choose( null, pegawai.defaultObject );
-			
-			object.nip = $( '#form-pegawai-nip' ).val();
-			object.nama = $( '#form-pegawai-nama' ).val();
-			object.golongan = $( '#form-pegawai-golongan' ).val();
-			object.jabatan = $( '#form-pegawai-jabatan' ).val();
-			object.bagian = storage.getByNama( bagian, $( '#form-pegawai-bagian' ).val() );
-			
-			return object;
-		},
 		
 		setDetail: function( nip ) {
 
-			var obj = storage.getByNip( pegawai, nip );
+			var obj = storage.getByNip( pegawaiDomain, nip );
 			
-			this.resetForm( obj );
-			
+			$( '#form-pegawai-nip' ).val( obj.nip );
+			$( '#form-pegawai-nik' ).val( obj.nik );
+			$( '#form-pegawai-nama' ).val( obj.nama );
+			$( '#form-pegawai-password' ).val( 'password' );
+
+			var tanggalLahir = myDate.fromFormattedString( obj.tanggalLahirStr );
+			$( '#form-pegawai-tanggal-lahir' ).val( tanggalLahir.getDatePickerString() );
+
+			pegawaiDomain.currentId = obj.id;
+			pegawaiDomain.currentIdPenduduk = obj.idPenduduk;
+			pegawaiDomain.currentIdUnitKerja = obj.unitKerja.id;
+
+			message.writeLog( 'idUnitKerja: ' + pegawaiDomain.currentIdUnitKerja ); // LOG
+			message.writeLog( 'id: ' + pegawaiDomain.currentId ); // LOG
+			message.writeLog( 'idPenduduk: ' + pegawaiDomain.currentIdPenduduk ); // LOG
 		},
 		
-		resetForm: function( obj ) {
+		openMutasi: function( idPegawai ) {
+			pegawaiDomain.currentId = idPegawai;
+		},
 		
-			page.change( $( '#list-unitKerjaDomain' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
-			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
-
-			$( '#form-pegawai-nip' ).val( obj.nip );
-			$( '#form-pegawai-nama' ).val( obj.nama );
-			$( '#form-pegawai-golongan' ).val( obj.golongan );
-			$( '#form-pegawai-jabatan' ).val( obj.jabatan );
-			$( '#form-pegawai-unitKerjaDomain' ).val( obj.bagian.unitKerjaDomain.nama );
-			$( '#form-pegawai-bagian' ).val( obj.bagian.nama );
-
-			pegawai.currentObject = obj;
+		openPromosiPangkat: function( idPegawai ) {
+			pegawaiDomain.currentId = idPegawai;
+		},
 		
+		openPromosiJabatan: function( idPegawai, idSatker ) {
+			pegawaiDomain.currentId = idPegawai;
+			
+			jabatanRestAdapter.findBySatker( idSatker, function( result ) {
+				if ( result.tipe == 'LIST' )
+					page.change( $( '#list-jabatan' ), page.list.dataList.generateFromList( result.list, 'list-jabatan') );
+			});
 		}
-
 	},
-	
 };
 
 
@@ -410,6 +405,46 @@ var pegawai = {
  */
 var kalendarDomain = {
 	
+	nama: 'KALENDAR',
+	
+	currentObject: null,
+	
+	defaultObject: {},
+	
+	success: function( result ) {
+		
+	},
+	
+	reload: function() {
+		throw new Error( 'reload' );
+	},
+	
+	load: function( list ) {
+		
+	},
+	
+	content: {
+		
+		setData: function( list, pageNumber ) {
+			
+		},
+		
+		getContent: function( list ) {
+			
+		},
+		
+		getObject: function() {
+			
+		},
+		
+		setDetail: function( id ) {
+			
+		},
+		
+		resetForm: function( obj ) {
+			
+		}
+	}
 };
 
 /**
@@ -459,7 +494,6 @@ var absenDomain = {
 			page.load( $( '#content' ), 'html/absen.html' );
 
 			page.change( $( '#list-unitkerja' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
-			page.change( $( '#list-bagian' ), page.list.option.generateFromStorage( bagian.nama ) );
 			
 		},
 
@@ -493,8 +527,8 @@ var absenDomain = {
 				var tmp = list[ index ];
 				
 				html += '<tr>' +
-					'<td>' + tmp.pegawai.nip + '</td>' +
-					'<td>' + tmp.pegawai.nama + '</td>' +
+					'<td>' + tmp.pegawaiDomain.nip + '</td>' +
+					'<td>' + tmp.pegawaiDomain.nama + '</td>' +
 					'<td>' + tmp.tanggalStr + '</td>' +
 					'<td>' + tmp.status + '</td>' +
 					'<td>' + tmp.pagiStr + '</td>' +
@@ -530,8 +564,8 @@ var absenDomain = {
 	
 		resetForm: function( obj ) {
 			
-			$( '#form-absen-nip' ).val( obj.pegawai.nip );
-			$( '#form-absen-nama' ).val( obj.pegawai.nama );
+			$( '#form-absen-nip' ).val( obj.pegawaiDomain.nip );
+			$( '#form-absen-nama' ).val( obj.pegawaiDomain.nama );
 			$( '#form-absen-tanggal' ).val( obj.tanggal );
 			$( '#form-absen-pagi' ).val( obj.pagiStr );
 			$( '#form-absen-tengah' ).val( obj.tengahStr);
@@ -549,6 +583,46 @@ var absenDomain = {
  */
 var suratTugasDomain = {
 	
+	nama: 'SURAT TUGAS',
+	
+	currentObject: null,
+	
+	defaultObject: {},
+	
+	success: function( result ) {
+		
+	},
+	
+	reload: function() {
+		throw new Error( 'reload' );
+	},
+	
+	load: function( list ) {
+		
+	},
+	
+	content: {
+		
+		setData: function( list, pageNumber ) {
+			
+		},
+		
+		getContent: function( list ) {
+			
+		},
+		
+		getObject: function() {
+			
+		},
+		
+		setDetail: function( id ) {
+			
+		},
+		
+		resetForm: function( obj ) {
+			
+		}
+	}
 };
 
 /**
@@ -556,6 +630,46 @@ var suratTugasDomain = {
  */
 var sppdDomain = {
 	
+	nama: 'SPPD',
+	
+	currentObject: null,
+	
+	defaultObject: {},
+	
+	success: function( result ) {
+		
+	},
+	
+	reload: function() {
+		throw new Error( 'reload' );
+	},
+	
+	load: function( list ) {
+		
+	},
+	
+	content: {
+		
+		setData: function( list, pageNumber ) {
+			
+		},
+		
+		getContent: function( list ) {
+			
+		},
+		
+		getObject: function() {
+			
+		},
+		
+		setDetail: function( id ) {
+			
+		},
+		
+		resetForm: function( obj ) {
+			
+		}
+	}
 };
 
 

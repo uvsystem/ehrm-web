@@ -30,7 +30,7 @@ $( document ).ready( function () {
 			message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
 			message.writeLog( 'Maaf, anda tidak bisa mengakses halaman ini' ); // LOG
 			
-			//window.location.href = 'login.html';
+			window.location.href = 'login.html';
 			return;
 			
 		}
@@ -39,10 +39,12 @@ $( document ).ready( function () {
 	
 	storage.reset();
 
-	page.change( $( '#operator-nama' ), operator.getUsername() );
+	page.change( $( '#operator-nama' ), operator.getName() );
 	page.setName( 'HOME' );
 	
-	navigation( operator.getUsername() == 'ADMIN' ? 'ADMIN' : operator.getRole() );
+	message.writeLog( operator.getUsername() );
+	var navDef = navigation( operator.getUsername() == 'superuser' ? 'ADMIN' : operator.getRole() );
+	page.change( $( '#nav-menu' ), navDef );
 
 	$( function () {
 	
@@ -60,10 +62,17 @@ $( document ).ready( function () {
 
 	} );
 
+	$( document ).on( 'click', '#menu-jabatan', function() {
+
+		page.change( $( '#message' ), '');
+		jabatanDomain.reload();
+
+	} );
+
 	$( document ).on( 'click', '#menu-pegawai', function() {
 		
 		page.change( $( '#message' ), '');
-		pegawai.reload();
+		pegawaiDomain.reload();
 
 	} );
 
@@ -186,65 +195,70 @@ $( document ).ready( function () {
 	
 	
 	// SKPD Handler
-	$( document ).on( 'click', '#btn-unitKerjaDomain-tambah', function() {
+	$( document ).on( 'click', '#btn-skpd-tambah', function() {
 	
-		$( '#form-unitKerjaDomain-kode' ).val( '' );
-		$( '#form-unitKerjaDomain-nama' ).val( '' );
-
-	} );
-	
-	$( document ).on( 'click', '#btn-simpan-unitKerjaDomain', function() {
-
-		var object = unitKerjaDomain.content.getObject();
-
-		rest.call( '/unitKerjaDomain', object, 'POST', unitKerjaDomain.success, message.error );
+		page.change( $( '#unitkerja-list' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'unitkerja-list' ) );
 		
-		unitKerjaDomain.currentObject = null;
-
-	} );
-	
-	// Bagian Handler
-	$( document ).on( 'click', '#btn-bagian-tambah', function() {
-	
-		$( '#form-bagian-kode' ).val( '' );
-		$( '#form-bagian-nama' ).val( '' );
-		$( '#form-bagian-unitKerjaDomain' ).val( '' );
-
-		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
+		$( '#form-skpd-parent' ).val( '' );
+		$( '#form-skpd-kode' ).val( '' );
+		$( '#form-skpd-nama' ).val( '' );
 		
+		unitKerjaDomain.currentId = 0;
+
 	} );
 	
-	$( document ).on( 'click', '#btn-simpan-bagian', function() {
+	$( document ).on( 'click', '#btn-simpan-skpd', function() {
 
-		var object = bagian.content.getObject();
-
-		rest.call( '/bagian', object, 'POST', bagian.success, message.error );
+		var id = unitKerjaDomain.currentId;
+		var kode = $( '#form-skpd-kode' ).val();
+		var nama = $( '#form-skpd-nama' ).val();
+		var tipe = $( '#form-skpd-tipe' ).val();
 		
-		bagian.currentObject = null;
+		var onSuccess = function ( result ) {
 
+			message.success( result );
+			unitKerjaDomain.reload();
+
+		};
+
+		var namaParent = $( '#form-skpd-parent' ).val();
+		if ( namaParent != '' ) {
+			
+			var parent = storage.getByNama( unitKerjaDomain, namaParent );
+			var kodeParent = ( parent ? parent.singkatan : '' );
+
+			unitKerjaRestAdapter.addSubUnit( kodeParent, id, nama, tipe, kode, onSuccess);
+			
+		} else {
+
+			unitKerjaRestAdapter.save( id, nama, tipe, kode, onSuccess);
+		
+		}
 	} );
 
+	$( document ).on( 'click', '#btn-hapus-skpd', function() {
+		throw new Error( 'Not Yet Implemented' );
+	} );
 
 
 	// Absen handler.
-	$( document ).on( 'click', '#btn-absenDomain-tambah', function() {
+	$( document ).on( 'click', '#btn-absen-tambah', function() {
 		
-		$( '#form-absenDomain-nip' ).val( '' );
-		$( '#form-absenDomain-tanggal' ).val( '' );
-		$( '#form-absenDomain-pagi' ).val( '7:30' );
-		$( '#form-absenDomain-tengah' ).val( '11:30' );
-		$( '#form-absenDomain-siang' ).val( '13:00' );
-		$( '#form-absenDomain-sore' ).val( '16:00' );
+		$( '#form-absen-nip' ).val( '' );
+		$( '#form-absen-tanggal' ).val( '' );
+		$( '#form-absen-pagi' ).val( '7:30' );
+		$( '#form-absen-tengah' ).val( '11:30' );
+		$( '#form-absen-siang' ).val( '13:00' );
+		$( '#form-absen-sore' ).val( '16:00' );
 		
 		var daftarNip = page.list.option.generateNip( storage.get( pegawai.nama ) );
-		
 		page.change( $( '#list-nip' ), daftarNip );
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absenDomain-simpan', function() {
+	$( document ).on( 'click', '#btn-absen-simpan', function() {
 		
-		var nip = $( '#form-absenDomain-nip' ).val();
+		var nip = $( '#form-absen-nip' ).val();
 		
 		var loadPegawai = function( result ) {
 			
@@ -252,11 +266,11 @@ $( document ).ready( function () {
 
 				var _pegawai = result.object;
 			
-				var tanggal = myDate.fromDatePicker( $( '#form-absenDomain-tanggal' ).val() );
-				var pagi = $( '#form-absenDomain-pagi' ).val();
-				var tengah = $( '#form-absenDomain-tengah' ).val();
-				var siang = $( '#form-absenDomain-siang' ).val();
-				var sore = $( '#form-absenDomain-sore' ).val();
+				var tanggal = myDate.fromDatePicker( $( '#form-absen-tanggal' ).val() );
+				var pagi = $( '#form-absen-pagi' ).val();
+				var tengah = $( '#form-absen-tengah' ).val();
+				var siang = $( '#form-absen-siang' ).val();
+				var sore = $( '#form-absen-sore' ).val();
 				
 				var _absen = {
 					pegawai: _pegawai,
@@ -267,7 +281,7 @@ $( document ).ready( function () {
 					sore: sore
 				};
 				
-				rest.call( '/absenDomain', _absen, 'POST', absenDomain.success, message.error );
+				rest.call( '/absen', _absen, 'POST', absenDomain.success, message.error );
 			}
 		};
 		
@@ -275,9 +289,9 @@ $( document ).ready( function () {
 		
 	} );
 	
-	$( document ).on( 'click', '#btn-absenDomain-sakit', function() {
+	$( document ).on( 'click', '#btn-absen-sakit', function() {
 	
-		$( '#form-absenDomain-sakit-nip' ).val( '' );
+		$( '#form-absen-sakit-nip' ).val( '' );
 		$( '#form-absenDomain-sakit-tanggal' ).val( '' );
 		$( '#form-absenDomain-sakit-keterangan' ).val( '' );
 		
@@ -365,9 +379,9 @@ $( document ).ready( function () {
 		
 	} );
 	
-	$( document ).on( 'click', '#absenDomain-cari', function() {
+	$( document ).on( 'click', '#absen-cari', function() {
 		
-		var namaBagian = $( '#absenDomain-bagian' ).val();
+		var namaBagian = $( '#absen-bagian' ).val();
 		var namaSkpd = $( '#absenDomain-unitKerjaDomain' ).val();
 		var tanggalAwal = myDate.fromDatePicker( $( '#absenDomain-tanggal-awal' ).val() );
 		var tanggalAkhir = myDate.fromDatePicker( $( '#absenDomain-tanggal-akhir' ).val() );
@@ -400,83 +414,95 @@ $( document ).ready( function () {
 		$( '#form-absenDomain-nama' ).val( tmp.nama );
 		
 	} );
-
-
-	// Otentikasi handler.
-	$( document ).on( 'click', '#btn-kategori-tambah', function() {
-
-		kategori.currentObject = choose( null, kategori.defaultObject );
-		kategori.content.resetForm( kategori.currentObject );
-
-	} );
-
-	$( document ).on( 'click', '#btn-simpan-kategori', function() {
-
-		var object = kategori.content.getObject();
-		var url = '/kategori/simpan.php';
-
-		if ( object.id == 0 )
-			url = '/kategori/baru.php';
-
-		rest.call( url, object, 'POST', kategori.success, message.error );
-
-		kategori.currentObject = null;
-		
-	} );
-
-
-	
-	// Operator handler.
-	$( document ).on( 'click', '#btn-operator-tambah', function() {
-
-		operatorAbsen.currentObject = choose( null, operatorAbsen.defaultObject );
-		operatorAbsen.content.resetForm( operatorAbsen.currentObject );
-
-	} );
-
-	$( document ).on( 'click', '#btn-simpan-operator', function() {
-
-		var object = operatorAbsen.content.getObject();
-
-		rest.call( '/operator', object, 'POST', operatorAbsen.success, message.error );
-		
-		operatorAbsen.currentObject = null;
-
-	} );
-
 	
 	
 	// Pegawai handler(s).
+	function onPegawaiSuccessSave( result ) {
+		message.success( result );
+		pegawaiDomain.reload();
+	};
+	
 	$( document ).on( 'click', '#btn-pegawai-tambah', function() {
+			
+		$( '#form-pegawai-nip' ).val( '' );
+		$( '#form-pegawai-nik' ).val( '' );
+		$( '#form-pegawai-nama' ).val( '' );
+		$( '#form-pegawai-tanggal-lahir' ).val( '' );
+		$( '#form-pegawai-password' ).val( '' );
 
-		pegawai.currentObject = choose( null, pegawai.defaultObject );
-		pegawai.content.resetForm( pegawai.currentObject );
+		pegawaiDomain.currentId = 0;
+		pegawaiDomain.currentIdPenduduk = 0;
+		pegawaiDomain.currentIdUnitKerja = pegawaiDomain.idSekretariatDaerah();
 
 	} );
 
 	$( document ).on( 'click', '#btn-simpan-pegawai', function() {
 
-		var object = pegawai.content.getObject();
+		var idSatuanKerja = pegawaiDomain.currentIdUnitKerja;
+		var id = pegawaiDomain.currentId;
+		var idPenduduk = pegawaiDomain.currentIdPenduduk;
+		var nip = $( '#form-pegawai-nip' ).val();
+		var nik = $( '#form-pegawai-nik' ).val();
+		var nama = $( '#form-pegawai-nama' ).val();
+		var tanggal = myDate.fromDatePicker( $( '#form-pegawai-tanggal-lahir' ).val() );
+		var tanggalLahir = myDate.toFormattedString( tanggal );
+		var password = $( '#form-pegawai-password' ).val();
+		
+		if ( !password )
+			password = 'password';
 
-		rest.call( '/pegawai', object, 'POST', pegawai.success, message.error );
-		
-		pegawai.currentObject = null;
-		
+		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir, '', '', idPenduduk, onPegawaiSuccessSave );
 	} );
 	
-	$( document ).on( 'change', '#form-pegawai-unitKerjaDomain', function() {
+	$( document ).on( 'click', '#btn-simpan-mutasi', function() {
 		
-		var namaSkpd = $( '#form-pegawai-unitKerjaDomain' ).val();
-		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
+		var pegawai = storage.getById( pegawaiDomain, pegawaiDomain.currentId );
+		var nip = pegawai.nip;
 		
-		var onSuccess = function( result ) {
-		
-			page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
-		};
-		
-		rest.call( '/bagian/unitKerjaDomain/' + _skpd.id, {}, 'GET', onSuccess, message.error );
+		var namaUnitKerja = $( '#form-mutasi-unit-kerja' ).val();
+		var unitKerja = storage.getByNama( unitKerjaDomain, namaUnitKerja );
+		var kode = unitKerja.singkatan;
+
+		pegawaiRestAdapter.mutasi( nip, kode, onPegawaiSuccessSave );
 	} );
 	
+	$( document ).on( 'click', '#btn-simpan-promosi-pangkat', function() {
+		
+		var pegawai = storage.getById( pegawaiDomain, pegawaiDomain.currentId );
+		var nip = pegawai.nip;
+		var pangkat = $( '#form-promosi-pangkat-pangkat' ).val();
+		var nomorSk = $( '#form-promosi-pangkat-nomor-sk' ).val();
+		var tanggalMulai = myDate.fromDatePicker( $( '#form-promosi-pangkat-tanggal-mulai' ).val() );
+		tanggalMulai = tanggalMulai.getFormattedString();
+		var tanggalSelesai = $( '#form-promosi-pangkat-tanggal-selesai' ).val();
+		if ( tanggalSelesai )
+			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
+
+		pegawaiRestAdapter.promosiPangkat( nip, pangkat, nomorSk, tanggalMulai, tanggalSelesai, onPegawaiSuccessSave );
+	} );
+	
+	$( document ).on( 'click', '#btn-simpan-promosi-jabatan', function() {
+		
+		var pegawai = storage.getById( pegawaiDomain, pegawaiDomain.currentId );
+		var nip = pegawai.nip;
+		var jabatan = storage.getByNama( jabatanDomain, $( '#form-promosi-jabatan-jabatan' ).val() );
+		var nomorSk = $( '#form-promosi-jabatan-nomor-sk' ).val();
+		var tanggalMulai = myDate.fromDatePicker( $( '#form-promosi-jabatan-tanggal-mulai' ).val() );
+		tanggalMulai = tanggalMulai.getFormattedString();
+		var tanggalSelesai = $( '#form-promosi-jabatan-tanggal-selesai' ).val();
+		if ( tanggalSelesai )
+			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
+
+		pegawaiRestPegawai.promosiPangkat( nip, jabatan.id, nomorSk, tanggalMulai, tanggalSelesai, onPegawaiSuccessSave );
+	} );
+
+	$( document ).on( 'change', '#text-satuan-kerja', function() {
+		var satker = storage.getByNama( unitKerjaDomain, $( '#text-satuan-kerja' ).val() );
+		
+		pegawaiRestAdapter.findBySatker( satker.id, function( result ) {
+			pegawaiDomain.load( result.list );
+		});
+	} );
 	
 	
 	// Cari Handler.
@@ -500,31 +526,20 @@ $( document ).ready( function () {
 		var halaman = page.getName();
 		
 		if ( !halaman )
+			
 			throw new Error( 'Nama halaman belum di atur' );
 		
-		if ( halaman == pegawai.nama ) {
-		
-			pegawai.loader.loadSearch( kataKunci );
-			
-		} else if ( halaman == operatorAbsen.nama ) {
-		
-			operatorAbsen.loader.loadSearch( kataKunci );
-			
-		} else if ( halaman == otentikasi.nama ) {
-		
-			otentikasi.loader.loadSearch( kataKunci );
-			
-		} else if ( halaman == absenDomain.nama ) {
-		
-			absenDomain.loader.loadSearch( kataKunci );
+		if ( halaman == pegawaiDomain.nama ) {
+
+			pegawaiRestAdapter.search( kataKunci, function( result ) {
+				pegawaiDomain.load( result.list );
+			});
 			
 		} else if ( halaman == unitKerjaDomain.nama ) {
 		
-			unitKerjaDomain.loader.loadSearch( kataKunci );
-			
-		} else if ( halaman == bagian.nama ) {
-		
-			bagian.loader.loadSearch( kataKunci );
+			unitKerjaRestAdapter.search( kataKunci, function( result ) {
+				unitKerjaDomain.load( result.list );
+			});
 			
 		} else {
 
