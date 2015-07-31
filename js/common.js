@@ -38,6 +38,8 @@ var message = {
 	 * Lakukan aksi berdasarkan tipe message.
 	 */
 	success: function(result) {
+
+		page.change( $( '#message' ), '');
 	
 		switch ( result.tipe ) {
 		
@@ -619,21 +621,17 @@ var myDate = {
 				return this.year + "-" + this.month + "-" + this.day;
 			},
 			getNumber: function() {
-				return this.year + this.month + this.day;
+				return ( parseInt( this.year ) * 365 ) + ( parseInt( this.month ) * 30 ) + parseInt( this.day );
 			},
 			isBefore: function ( comparer ) {
-			
-				var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
-
-				return ( this.getNumber() < comparerNumber );
-				
+				return ( this.getNumber() < comparer.getNumber() );
 			},
 			isAfter: function ( comparer ) {
-			
-				var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
-				
-				return ( this.getNumber() > comparerNumber );
-				
+				return ( this.getNumber() > comparer.getNumber() );
+			},
+			isExpire: function() {
+				var now = myDate.fromDate( new Date() );
+				return now.isAfter( expire )
 			}
 		};
 	},
@@ -712,43 +710,14 @@ var myDate = {
 		
 	},
 	
-	nowString: function() {
-	
-		var date = this.fromDate( new Date() );
-		
-		return this.toString( date );
-		
-	},
-	
-	nowFormattedString: function() {
-	
-		var date = this.fromDate( new Date() );
-		
-		return this.toFormattedString( date );
-		
+	getNow: function() {
+		return this.fromDate( this.now() );
 	},
 	
 	getAwal: function() {
 		
 		var date = new Date();
-		
-		return '1-' + ( date.getMonth() + 1 ) + '-' + date.getFullYear(); // return tanggal awal bulan berjalan
-		
-	},
-	
-	getAwalDatePicker: function() {
-
-		var date = this.fromString( this.getAwal() );
-		
-		return this.toDatePickerString( date );
-		
-	},
-	
-	getAwalFormatted: function() {
-		
-		var date = this.fromString( this.getAwal() );
-		
-		return this.toFormattedString( date );
+		return this.create( 1, date.getMonth() + 1, date.getFullYear() );
 		
 	},
 	
@@ -757,48 +726,8 @@ var myDate = {
 		var date = new Date();
 		date.setMonth( date.getMonth() + 1 );
 		date.setDate( 0 );
-		
-		return date.getDate() + '-' + ( date.getMonth() + 1 ) + '-' + date.getFullYear(); // return tanggal akhir bulan berjalan
-		
-	},
-	
-	getAkhirDatePicker: function() {
-		
-		var date = this.fromString( this.getAkhir() );
-		
-		return this.toDatePickerString( date );
-		
-	},
-	
-	getAkhirFormatted: function() {
-		
-		var date = this.fromString( this.getAkhir() );
-		
-		return this.toFormattedString( date );
-		
-	},
 
-	getTanggal: function() {
-		
-		var date = new Date();
-		
-		return date.getDate();
-		
-	},
-	
-	getBulan: function() {
-		
-		var date = new Date();
-		
-		return date.getMonth() + 1;
-		
-	},
-	
-	getTahun: function() {
-		
-		var date = new Date();
-		
-		return date.getFullYear();
+		return this.create( date.getDate(), date.getMonth() + 1, date.getFullYear() );
 		
 	},
 
@@ -862,68 +791,20 @@ var myDate = {
 		var str = this.split( date );
 		return this.create( str[1], str[0], str[2] );
 	},
-	
-	toString: function ( date ) {
-	
-		return date.day + "-" + date.month + "-" + date.year;
-
-	},
-	
-	toFormattedString: function ( date ) {
-	
-		return date.month + "-" + date.day + "-" + date.year;
-		
-	},
-	
-	toDatePickerString: function ( date ) {
-	
-		return date.year + "-" + date.month + "-" + date.day;
-		
-	},
-
-	isBefore: function ( object, comparer ) {
-	
-		var number = object.year + object.month + object.day;
-		var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
-
-		return ( number < comparerNumber );
-		
-	},
-
-	isAfter: function ( object, comparer ) {
-	
-		var number = object.year + object.month + object.day;
-		var comparerNumber = parseInt( comparer.year ) + parseInt( comparer.month ) + parseInt( comparer.day );
-		
-		return ( number > comparerNumber );
-		
-	},
 
 	formatDate: function ( unformattedDate ) {
-
 		var tmp = this.fromDate( unformattedDate );
-		
-		return this.toFormattedString( tmp );
-		
+		return tmp.getFormattedString();
 	},
 
 	formatDatePicker: function ( unformattedDate ) {
-
 		var tmp = this.fromDatePicker( unformattedDate );
-		
-		return this.toFormattedString( tmp );
-		
+		return tmp.getFormattedString();
 	},
 	
 	createFirstDate: function( bulan, tahun ) {
-	
 		var indexBulan = this.month.getIndex( bulan );
-		
-		return {
-			day: 1,
-			month: indexBulan,
-			year: tahun
-		};
+		return this.create( 1, indexBulan, tahun );
 	},
 	
 	createLastDate: function( bulan, tahun ) {
@@ -935,11 +816,7 @@ var myDate = {
 		date.setDate( 0 );
 		date.setFullYear( tahun );
 
-		return {
-			day: date.getDate(),
-			month: indexBulan,
-			year: tahun
-		};
+		return this.create( date.getDate(), indexBulan, tahun );
 	}
 };
 
@@ -1388,11 +1265,11 @@ var operator = {
 		try {
 			
 			var token = this.getToken();
-			var now = myDate.formatDate( new Date() );
-			var expire = myDate.fromString( token.expireStr );
+			var now = myDate.fromDate( new Date() );
+			var expire = myDate.fromFormattedString( token.expireStr );
 			
 			// Jika token sudah expire, maka user dianggap belum login
-			if ( myDate.isAfter( now, expire ) )
+			if ( now.isAfter( expire ) )
 				return false;
 
 			return true;

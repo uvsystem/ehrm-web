@@ -305,7 +305,7 @@ var pegawaiRestAdapter = {
 	
 		ehrmRestAdapter.call( '/pegawai/' + nip + '/jabatan/' + idJabatan, riwayat, 'POST',
 			function( result ) {
-				message.writeLog( "Promosi  pegawai  " + nip + " ke jabatan " + jabatan ); // LOG
+				message.writeLog( "Promosi  pegawai  " + nip + " ke jabatan " + idJabatan ); // LOG
 				callback( result );
 			},
 			message.error
@@ -484,10 +484,25 @@ var kalendarRestAdapter = {
 			message.error
 		);
 	},
+
+	"delete": function( tanggal, callback ) {
+
+		tanggal = tanggal.replace( "/", "-" );
+		tanggal = tanggal.replace( "/", "-" );
+		tanggal = tanggal.replace( "/", "-" );
+
+		ehrmRestAdapter.call( '/kalendar/' + tanggal, null, 'DELETE',
+			function( result ) {
+				message.writeLog( "Mengambil kalendar: " + result.object ); // LOG
+				callback( result );
+			},
+			message.error
+		);
+	},
 		
 	findRange: function( tanggalAwal, tanggalAkhir, callback ) {
 
-		ehrmRestAdapter.call( '/kalendar/' + tanggalAwal + '/' + tanggalAkhir, null, 'GET',
+		ehrmRestAdapter.call( '/kalendar/' + tanggalAwal + '/to/' + tanggalAkhir, null, 'GET',
 			function( result ) {
 				message.writeLog( "Mengambil kalendar: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );

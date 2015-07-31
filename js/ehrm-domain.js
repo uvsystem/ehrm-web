@@ -53,6 +53,7 @@ var user = {
 };
 
 
+
 /**
  *
  */
@@ -107,7 +108,7 @@ var aplikasiDomain = {
 var unitKerjaDomain = {
 	
 	nama: 'SATKER',
-		
+
 	currentId: 0,
 
 	defaultObject: {
@@ -120,17 +121,14 @@ var unitKerjaDomain = {
 	reload: function() {
 
 		unitKerjaRestAdapter.all( function( result ) {
-			
 				unitKerjaDomain.load( result.list );
 				storage.set( result.list, unitKerjaDomain.nama );
-			
 			}
 		);
-		
 	},
 	
 	load: function( list ) {
-
+	
 		page.setName( unitKerjaDomain.nama );
 		page.load( $( '#content' ), 'html/satuan-kerja.html' );
 
@@ -204,38 +202,74 @@ var jabatanDomain = {
 	currentObject: null,
 	
 	defaultObject: {},
-	
-	success: function( result ) {
-		
-	},
+
+	currentId: 0,
+	currentIdPenduduk: 0,
+	currentIdUnitKerja: 0,
 	
 	reload: function() {
-		throw new Error( 'reload' );
+		
+		jabatanRestAdapter.findBySatker( pegawaiDomain.idSekretariatDaerah(), function( result ) {
+			jabatanDomain.load( result.list );	
+		});
 	},
 	
 	load: function( list ) {
+
+		page.setName( jabatanDomain.nama );
 		
+		page.load( $( '#content' ), 'html/jabatan.html' );
+		jabatanDomain.content.setData( list );
+
+		storage.set( list, jabatanDomain.nama );
+		
+		page.change( $( '#list-satker' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satker') );
 	},
 	
 	content: {
 		
 		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = jabatanDomain;
+			activeContainer.list = list;
 			
-		},
-		
-		getContent: function( list ) {
+			var firstLast = tableSet( list, pageNumber );
+			var html = '';	
 			
-		},
-		
-		getObject: function() {
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
 			
+				var tmp = list[ index ];
+
+				html += '<tr>' +
+					'<td>' + tmp.nama + '</td>' +
+					'<td>' + tmp.unitKerja.nama + '</td>' +
+					'<td>' + tmp.eselon + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="jabatanDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-jabatan">Detail</button>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
 		},
 		
 		setDetail: function( id ) {
 			
-		},
-		
-		resetForm: function( obj ) {
+			var jabatan = storage.getById( jabatanDomain, id );
+
+			$( '#form-jabatan-satuan-kerja' ).val( jabatan.unitKerja.nama );
+			$( '#form-jabatan-eselon' ).val( jabatan.eselon );
+			$( '#form-jabatan-pangkat' ).val( jabatan.pangkat );
+			$( '#form-jabatan-nama' ).val( jabatan.nama );
+
+			jabatanDomain.currentId = jabatan.id;
 			
 		}
 	}
@@ -270,6 +304,11 @@ var pegawaiDomain = {
 		var setda = storage.getByNama( unitKerjaDomain, 'Sekretariat Daerah');
 		return setda.id;
 	},
+	
+	success: function( result ) {
+		message.success( result );
+		pegawaiDomain.reload();
+	},
 
 	load: function( list ) {
 
@@ -277,6 +316,8 @@ var pegawaiDomain = {
 		
 		page.load( $( '#content' ), 'html/pegawai.html' );
 		pegawaiDomain.content.setData( list );
+
+		storage.set( list, pegawaiDomain.nama );
 		
 		page.change( $( '#list-satker' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satker') );
 	},
@@ -285,7 +326,6 @@ var pegawaiDomain = {
 
 		pegawaiRestAdapter.findBySatker( pegawaiDomain.idSekretariatDaerah(), function( result ) {
 			pegawaiDomain.load( result.list );	
-			storage.set( result.list, pegawaiDomain.nama );
 		});
 	},
 	
@@ -390,10 +430,12 @@ var pegawaiDomain = {
 		
 		openPromosiJabatan: function( idPegawai, idSatker ) {
 			pegawaiDomain.currentId = idPegawai;
-			
+
 			jabatanRestAdapter.findBySatker( idSatker, function( result ) {
-				if ( result.tipe == 'LIST' )
+				if ( result.tipe == 'LIST' ) {
 					page.change( $( '#list-jabatan' ), page.list.dataList.generateFromList( result.list, 'list-jabatan') );
+					storage.set( result.list, jabatanDomain.nama );
+				}
 			});
 		}
 	},
@@ -411,38 +453,96 @@ var kalendarDomain = {
 	
 	defaultObject: {},
 	
-	success: function( result ) {
-		
-	},
-	
 	reload: function() {
-		throw new Error( 'reload' );
+		
+		var awal = myDate.getAwal();
+		var akhir = myDate.getAkhir();
+		
+		kalendarRestAdapter.findRange( awal.getFormattedString(), akhir.getFormattedString(), function( result ) {
+			kalendarDomain.load( result.list );
+		});
 	},
 	
 	load: function( list ) {
+
+		page.setName( kalendarDomain.nama );
 		
+		page.load( $( '#content' ), 'html/kalendar.html' );
+		kalendarDomain.content.setData( list );
+
+		storage.set( list, kalendarDomain.nama );
+
 	},
 	
 	content: {
 		
 		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = jabatanDomain;
+			activeContainer.list = list;
 			
+			var firstLast = tableSet( list, pageNumber );
+			var html = '';	
+			
+			for ( var index = firstLast.first; index < firstLast.last; index += 5 ) {
+
+				var tmp1 = myDate.fromDatePicker( list[ index ].tanggal );
+				var tmp2 = list[ index + 1 ] ? myDate.fromDatePicker( list[ index + 1 ].tanggal ) : null;
+				var tmp3 = list[ index + 2 ] ? myDate.fromDatePicker( list[ index + 2 ].tanggal ) : null;
+				var tmp4 = list[ index + 3 ] ? myDate.fromDatePicker( list[ index + 3 ].tanggal ) : null;
+				var tmp5 = list[ index + 4 ] ? myDate.fromDatePicker( list[ index + 4 ].tanggal ) : null;
+				
+				html += '<tr>' +
+					'<td>' + tmp1.getFormattedString() + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="kalendarDomain.content.delete(' + tmp1.day + ', ' + tmp1.month + ', ' + tmp1.year + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'<td>' + ( tmp2 ? tmp2.getFormattedString() : '' ) + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="kalendarDomain.content.delete(' + ( tmp2 ?  tmp2.day + ', ' + tmp2.month + ', ' + tmp2.year  : null) + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'<td>' + ( tmp3 ? tmp3.getFormattedString() : '' ) + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="kalendarDomain.content.delete(' + ( tmp3 ?  tmp3.day + ', ' + tmp3.month + ', ' + tmp3.year  : null) + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'<td>' + ( tmp4 ? tmp4.getFormattedString() : '' ) + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="kalendarDomain.content.delete(' + ( tmp4 ?  tmp4.day + ', ' + tmp4.month + ', ' + tmp4.year  : null) + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'<td>' + ( tmp5 ? tmp5.getFormattedString() : '' ) + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="kalendarDomain.content.delete(' + ( tmp5 ? tmp5.day + ', ' + tmp5.month + ', ' + tmp5.year : null) + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
 		},
 		
-		getContent: function( list ) {
-			
-		},
-		
-		getObject: function() {
-			
-		},
-		
-		setDetail: function( id ) {
-			
-		},
-		
-		resetForm: function( obj ) {
-			
+		"delete": function( date, month, year ) {
+			if ( !date || !month || !year )
+				throw new Error( 'object is undefined' );
+
+			message.writeLog( date + ', ' + month + ', ' + year );
+			kalendarRestAdapter.delete( month + '-' + date + '-' + year, function( result ) {
+				message.success( result );
+				kalendarDomain.reload();
+			});
 		}
 	}
 };

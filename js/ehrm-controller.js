@@ -76,6 +76,13 @@ $( document ).ready( function () {
 
 	} );
 
+	$( document ).on( 'click', '#menu-kalendar', function() {
+		
+		page.change( $( '#message' ), '');
+		kalendarDomain.reload();
+
+	} );
+
 	$( document ).on( 'click', '#menu-rekap', function() {
 		
 		page.change( $( '#message' ), '');
@@ -94,64 +101,6 @@ $( document ).ready( function () {
 		
 		page.change( $( '#message' ), '');
 		sppdDomain.reload();
-
-	} );
-
-
-	
-	// Navigation Handlers
-	$( document ).on( 'click', '#nav-user', function() {
-
-		user.load();
-
-	} );
-
-	$( document ).on( 'click', '#nav-home', function() {
-		
-		var todo;
-		
-		if ( operator.getRole() == 'ADMIN' ) {
-
-			todo = home.load;
-		
-		} else if ( operator.getRole() == 'PEGAWAI' ) {
-			
-			todo = absenDomain.reload;
-			
-		}
-		
-		todo();
-
-	} );
-
-	$( document ).on( 'click', '#nav-logout', function() {
-		
-		restAdapter.logout();
-
-	} );
-
-	$( document ).on( 'click', '#nav-operator', function() {
-
-		operatorAbsen.reload();
-
-	} );
-
-	$( document ).on( 'click', '#nav-pegawai', function() {
-		
-		pegawai.reload();
-
-	} );
-
-	$( document ).on( 'click', '#nav-otentikasi', function() {
-		
-		message.write("Maaf, belum tersedia");
-		//otentikasi.reload();
-		
-	} );
-
-	$( document ).on( 'click', '#nav-absensi', function() {
-		
-		absenDomain.reload();
 
 	} );
 
@@ -417,11 +366,6 @@ $( document ).ready( function () {
 	
 	
 	// Pegawai handler(s).
-	function onPegawaiSuccessSave( result ) {
-		message.success( result );
-		pegawaiDomain.reload();
-	};
-	
 	$( document ).on( 'click', '#btn-pegawai-tambah', function() {
 			
 		$( '#form-pegawai-nip' ).val( '' );
@@ -451,7 +395,7 @@ $( document ).ready( function () {
 		if ( !password )
 			password = 'password';
 
-		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir, '', '', idPenduduk, onPegawaiSuccessSave );
+		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir, '', '', idPenduduk, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-mutasi', function() {
@@ -463,7 +407,7 @@ $( document ).ready( function () {
 		var unitKerja = storage.getByNama( unitKerjaDomain, namaUnitKerja );
 		var kode = unitKerja.singkatan;
 
-		pegawaiRestAdapter.mutasi( nip, kode, onPegawaiSuccessSave );
+		pegawaiRestAdapter.mutasi( nip, kode, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-promosi-pangkat', function() {
@@ -478,7 +422,7 @@ $( document ).ready( function () {
 		if ( tanggalSelesai )
 			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
 
-		pegawaiRestAdapter.promosiPangkat( nip, pangkat, nomorSk, tanggalMulai, tanggalSelesai, onPegawaiSuccessSave );
+		pegawaiRestAdapter.promosiPangkat( nip, pangkat, nomorSk, tanggalMulai, tanggalSelesai, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-promosi-jabatan', function() {
@@ -493,11 +437,11 @@ $( document ).ready( function () {
 		if ( tanggalSelesai )
 			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
 
-		pegawaiRestPegawai.promosiPangkat( nip, jabatan.id, nomorSk, tanggalMulai, tanggalSelesai, onPegawaiSuccessSave );
+		pegawaiRestAdapter.promosiJabatan( nip, jabatan.id, nomorSk, tanggalMulai, tanggalSelesai, pegawaiDomain.success );
 	} );
 
-	$( document ).on( 'change', '#text-satuan-kerja', function() {
-		var satker = storage.getByNama( unitKerjaDomain, $( '#text-satuan-kerja' ).val() );
+	$( document ).on( 'change', '#text-pegawai-satuan-kerja', function() {
+		var satker = storage.getByNama( unitKerjaDomain, $( '#text-pegawai-satuan-kerja' ).val() );
 		
 		pegawaiRestAdapter.findBySatker( satker.id, function( result ) {
 			pegawaiDomain.load( result.list );
@@ -505,11 +449,89 @@ $( document ).ready( function () {
 	} );
 	
 	
+	// Jabatan Handler
+	$( document ).on( 'click', '#btn-jabatan-tambah', function() {
+
+		$( '#form-jabatan-satuan-kerja' ).val( '' );
+		$( '#form-jabatan-eselon' ).val( '' );
+		$( '#form-jabatan-pangkat' ).val( '' );
+		$( '#form-jabatan-nama' ).val( '' );
+
+		jabatanDomain.currentId = 0;
+
+	} );
+	
+	$( document ).on( 'click', '#btn-simpan-jabatan', function() {
+
+		var satker = storage.getByNama( unitKerjaDomain, $( '#form-jabatan-satuan-kerja' ).val() );
+		var id = jabatanDomain.currentId;
+		var eselon = $( '#form-jabatan-eselon' ).val();
+		var pangkat = $( '#form-jabatan-pangkat' ).val();
+		var nama = $( '#form-jabatan-nama' ).val();
+
+		jabatanRestAdapter.save( satker.id, id, eselon, pangkat, nama, function( result ) {
+			message.success( result );
+			jabatanDomain.reload();
+		});
+	} );
+
+	$( document ).on( 'change', '#text-jabatan-satuan-kerja', function() {
+		var satker = storage.getByNama( unitKerjaDomain, $( '#text-jabatan-satuan-kerja' ).val() );
+		
+		jabatanRestAdapter.findBySatker( satker.id, function( result ) {
+			jabatanDomain.load( result.list );
+		});
+	} );
+
+	
+	// Kalendar Handler
+	$( document ).on( 'click', '#btn-simpan-kalendar', function() {
+		
+		var tanggal = myDate.fromDatePicker( $( '#form-kalendar-tanggal' ).val() );
+		kalendarRestAdapter.add( tanggal.getFormattedString(), function( result ) {
+			message.success( result );
+			kalendarDomain.reload();
+		});
+	} );
+	
+	$( document ).on( 'change', '#text-tanggal-awal', function() {
+		var awalStr = $( '#text-tanggal-awal' ).val();
+		var akhirStr = $( '#text-tanggal-akhir' ).val();
+		
+		message.writeLog( awalStr + ':' + akhirStr );
+		
+		var awal = awalStr ? myDate.fromDatePicker( awalStr ) : null;
+		var akhir = akhirStr ? myDate.fromDatePicker( akhirStr ) : null;
+		
+		if ( awal && akhir && awal.isBefore( akhir ) ) {
+			kalendarRestAdapter.findRange( awal.getFormattedString(), akhir.getFormattedString(), function( result ) {
+				kalendarDomain.load( result.list );
+			});
+		}
+	} );
+	
+	$( document ).on( 'change', '#text-tanggal-akhir', function() {
+		var awalStr = $( '#text-tanggal-awal' ).val();
+		var akhirStr = $( '#text-tanggal-akhir' ).val();
+
+		message.writeLog( awalStr + ':' + akhirStr );
+		
+		var awal = awalStr ? myDate.fromDatePicker( awalStr ) : null;
+		var akhir = akhirStr ? myDate.fromDatePicker( akhirStr ) : null;
+		
+		if ( awal && akhir && awal.isBefore( akhir ) ) {
+			kalendarRestAdapter.findRange( awal.getFormattedString(), akhir.getFormattedString(), function( result ) {
+				kalendarDomain.load( result.list );
+			});
+		}
+	} );
+	
 	// Cari Handler.
 	$( document ).on( 'focus', '#search', function() {
 	
 		$( '#search' ).attr( 'placeholder', 'Masukan Kata Kunci' );
 		page.change( $( '#table' ), '' );
+		page.change( $( '#message' ), '');
 		
 	} );
 	
@@ -539,6 +561,12 @@ $( document ).ready( function () {
 		
 			unitKerjaRestAdapter.search( kataKunci, function( result ) {
 				unitKerjaDomain.load( result.list );
+			});
+			
+		} else if ( halaman == jabatanDomain.nama ) {
+		
+			jabatanRestAdapter.search( kataKunci, function( result ) {
+				jabatanDomain.load( result.list );
 			});
 			
 		} else {
