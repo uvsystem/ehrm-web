@@ -932,6 +932,26 @@ var storage = {
 		return null;
 	},
 
+	getByNomor: function ( container, nomor ) {
+		
+		var list = this.get( container.nama );
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+
+				if ( nomor == obj.nomor )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "api.js: getByKode(): Returning null for kode " + kode + " from " + container.nama + " storage." ); // LOG
+		
+		return null;
+	},
+
 	getByNip: function ( container, nip ) {
 		
 		var list = this.get( container.nama );
@@ -1099,6 +1119,14 @@ var tableSet = function( list, pageNumber) {
 	};
 };
 
+function changeChar( str, oldChar, newChar ) {
+
+	// message.writeLog( 'Not All Done' );
+	while ( str.match( oldChar ) )
+		str = str.replace( "/", "-" );
+		
+	return str;
+};
 
 /*
  * Variabel untuk menampung data pegawai yang melakukan login berdasarkan token.

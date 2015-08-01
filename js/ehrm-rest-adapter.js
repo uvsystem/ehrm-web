@@ -620,6 +620,8 @@ var suratTugasRestAdapter = {
 	
 	accept: function( nomor, callback ) {
 
+		nomor = changeChar( nomor, "/", "-" );
+
 		ehrmRestAdapter.call( '/suratTugas/' + nomor + '/terima', null, 'PUT',
 			function( result ) {
 				callback( result );
@@ -630,6 +632,8 @@ var suratTugasRestAdapter = {
 	},
 	
 	ignore: function( nomor, callback ) {
+
+		nomor = changeChar( nomor, "/", "-" );
 
 		ehrmRestAdapter.call( '/suratTugas/' + nomor + '/tolak', null, 'PUT',
 			function( result ) {
@@ -719,8 +723,8 @@ var suratTugasRestAdapter = {
 };
 
 var sppdRestAdapter = {
-		
-	save: function( nip, nomorSuratTugas, nomor, tanggalBerangkat, transportasi, kodeRekening, nomorDpa, tingkat, daftarPengikut, callback ) {
+	
+	add: function( nip, nomorSuratTugas, nomor, tanggalBerangkat, transportasi, kodeRekening, nomorDpa, tingkat, daftarPengikut, callback ) {
 
 		var sppd = {
 			nomor: nomor,
@@ -732,6 +736,8 @@ var sppdRestAdapter = {
 			daftarPengikut: daftarPengikut
 		};
 
+		nomorSuratTugas = changeChar( nomorSuratTugas, "/", "-" );
+		
 		ehrmRestAdapter.call( '/sppd/' + nip + '/suratTugas/' + nomorSuratTugas, sppd, 'POST',
 			function( result ) {
 				callback( result );
@@ -740,7 +746,41 @@ var sppdRestAdapter = {
 			message.error
 		);
 	},
-		
+	
+	save: function( id, nip, nomorSuratTugas, nomor, tanggalBerangkat, transportasi, kodeRekening, nomorDpa, tingkat, callback ) {
+
+		var sppd = {
+			id: id,
+			nomor: nomor,
+			tanggalBerangkatStr: tanggalBerangkat,
+			modaTransportasi: transportasi,
+			kodeRekening: kodeRekening,
+			nomorDpa: nomorDpa,
+			tingkat: tingkat
+		};
+
+		nomorSuratTugas = changeChar( nomorSuratTugas, "/", "-" );
+
+		ehrmRestAdapter.call( '/sppd/' + nip + '/suratTugas/' + nomorSuratTugas, sppd, 'POST',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menyimpan sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+
+	"delete": function( id, callback ) {
+
+		ehrmRestAdapter.call( '/sppd/' + id, null, 'DELETE',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menghapus sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
 	addFollower: function( nomor, nama, tanggalLahir, keterangan, callback ) {
 
 		var pengikut = {
@@ -748,11 +788,35 @@ var sppdRestAdapter = {
 			tanggalLahirStr: tanggalLahir,
 			keterangan: keterangan
 		};
+
+		nomor = changeChar( nomor, "/", "-" );
 			
 		ehrmRestAdapter.call( '/sppd/' + nomor + '/pengikut', pengikut, 'POST',
 			function( result ) {
 				callback( result );
 				message.writeLog( "Menambah pengikut sppd: " + result.object ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	findByTanggal: function( awal, akhir, callback ) {
+
+		ehrmRestAdapter.call( '/sppd/awal/' + awal + '/akhir/' + akhir, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	findBySatker: function( kode, callback ) {
+
+		ehrmRestAdapter.call( '/sppd/satker/' + kode, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);
@@ -764,6 +828,17 @@ var sppdRestAdapter = {
 			function( result ) {
 				callback( result );
 				message.writeLog( "Mengambil sppd: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	search: function( keyword, callback ) {
+
+		ehrmRestAdapter.call( '/sppd/search/' + keyword, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
 			},
 			message.error
 		);

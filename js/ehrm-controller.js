@@ -526,6 +526,62 @@ $( document ).ready( function () {
 	} );
 
 	
+	// SPPD Controller
+	$( document ).on( 'click', '#btn-sppd-tambah', function() {
+	
+		sppdDomain.currentId = 0;
+		/*
+		$( '#form-sppd-nip' ).val( '' );
+		$( '#form-sppd-nomor-spt' ).val( '' );
+		$( '#form-sppd-nomor' ).val( '' );
+		$( '#form-sppd-tanggal-berangkat' ).val( '' );
+		$( '#form-sppd-transportasi' ).val( '' );
+		$( '#form-sppd-kode-rekening' ).val( '' );
+		$( '#form-sppd-nomor-dpa' ).val( '' );
+		$( '#form-sppd-tingkat' ).val( '' );
+		*/
+	} );
+	
+	$( document ).on( 'click', '#btn-simpan-sppd', function() {
+
+		var id = sppdDomain.currentId;
+		var nip = $( '#form-sppd-nip' ).val();
+		var nomorSuratTugas = $( '#form-sppd-nomor-spt' ).val();
+		var nomor = $( '#form-sppd-nomor' ).val();
+		var tanggalBerangkat = myDate.fromDatePicker( $( '#form-sppd-tanggal-berangkat' ).val() );
+		var transportasi = $( '#form-sppd-transportasi' ).val();
+		var kodeRekening = $( '#form-sppd-kode-rekening' ).val();
+		var nomorDpa = $( '#form-sppd-nomor-dpa' ).val();
+		var tingkat = $( '#form-sppd-tingkat' ).val();
+		
+		sppdRestAdapter.save( id, nip, nomorSuratTugas, nomor, tanggalBerangkat.getFormattedString(), transportasi, kodeRekening, nomorDpa, tingkat, sppdDomain.success );
+		
+	} );
+
+	$( document ).on( 'click', '#btn-simpan-pengikut', function() {
+
+		var sppd = storage.getById( sppdDomain, sppdDomain.currentId );
+		var nama = $( '#form-pengikut-nama' ).val();
+		var tanggaLahir = myDate.fromDatePicker( $( '#form-pengikut-tanggal-lahir' ).val() );
+		var keterangan = $( '#form-pengikut-keterangan' ).val();
+		
+		sppdRestAdapter.addFollower( sppd.nomor, nama, tanggalLahir.getFormattedString(), keterangan, sppdDomain.success );
+		
+	} );
+
+	$( document ).on( 'change', '#sppd-satuan-kerja', function() {
+
+		page.change( $( '#message' ), '');
+
+		var satuanKerja = storage.getByNama( unitKerjaDomain, $( '#sppd-satuan-kerja' ).val() );
+		
+		sppdRestAdapter.findBySatker( satuanKerja.singkatan, function( result ) {
+			sppdDomain.load( result.list );
+			$( '#sppd-satuan-kerja' ).val( satuanKerja.nama )
+		});
+	} );
+	
+	
 	
 	// Cari Handler.
 	$( document ).on( 'focus', '#search', function() {

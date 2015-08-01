@@ -870,40 +870,143 @@ var sppdDomain = {
 	
 	currentObject: null,
 	
+	currentId: 0,
+	
 	defaultObject: {},
 	
 	success: function( result ) {
-		
+		message.success( result );
+		sppdDomain.reload();
 	},
 	
 	reload: function() {
-		throw new Error( 'reload' );
+
+		var awal = myDate.getAwal();
+		var akhir = myDate.getAkhir();
+		
+		sppdRestAdapter.findByTanggal( awal.getFormattedString(), akhir.getFormattedString(), function( result ) {
+				sppdDomain.load( result.list );
+				storage.set( result.list, sppdDomain.nama );
+			}
+		);
 	},
 	
 	load: function( list ) {
+	
+		page.setName( sppdDomain.nama );
+		page.load( $( '#content' ), 'html/sppd.html' );
+
+		sppdDomain.content.setData( list );
+
+		storage.set( list, sppdDomain.nama );
+		
+		page.change( $( '#list-satuan-kerja' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satuan-kerja') );
 		
 	},
 	
 	content: {
 		
 		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = pegawaiDomain;
+			activeContainer.list = list;
 			
-		},
-		
-		getContent: function( list ) {
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';	
 			
-		},
-		
-		getObject: function() {
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
 			
+				var tmp = list[ index ];
+
+				html += '<tr href="#" onclick="sptDomain.content.loadPengikut(' + tmp.id + ')">' +
+					'<td>' + tmp.nomor + '</td>' +
+					'<td>' + tmp.pemegangTugas.pegawai.nip + '</td>' +
+					'<td>' + tmp.tanggalBerangkat + '</td>' +
+					'<td>' +
+					'<div class="btn-group">' +
+					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+						'Pilihan <span class="caret"></span>' +
+					  '</button>' +
+					  '<ul class="dropdown-menu">' +
+						'<li><a href="#" onclick="sppdDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-sppd">Detail</a></li>' +
+						'<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pegawai</a></li>' +
+						'<li><a href="#" onclick="sppdDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
+					  '</ul>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
 		},
 		
 		setDetail: function( id ) {
 			
+			var sppd = storage.getById( sppdDomain, id );
+			
+			sppdDomain.currentId = sppd.id;
+			$( '#form-sppd-nip' ).val( sppd.pemegangTugas.pegawai.nip );
+			$( '#form-sppd-nomor-spt' ).val( sppd.nomorSuratTugas );
+			$( '#form-sppd-nomor' ).val( sppd.nomor );
+			$( '#form-sppd-tanggal-berangkat' ).val( sppd.berangkat );
+			$( '#form-sppd-transportasi' ).val( sppd.modaTransportasi );
+			$( '#form-sppd-kode-rekening' ).val( sppd.kodeRekening );
+			$( '#form-sppd-nomor-dpa' ).val( sppd.nomorDpa );
+			$( '#form-sppd-tingkat' ).val( sppd.tingkat );
+			
 		},
 		
-		resetForm: function( obj ) {
+		loadPengikut: function( id ) {
 			
+			var sppd = storage.getById( sppdDomain, id );
+			var list = suratTugas.daftarPengikut;
+			var pageNumber = 0;
+			
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = pegawaiDomain;
+			activeContainer.list = list;
+			
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';
+			
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
+			
+				var tmp = list[ index ];
+
+				html += '<tr>' +
+					'<td>' + tmp.nama + '</td>' +
+					'<td>' + tmp.tanggalLahir + '</td>' +
+					'<td>' + tmp.keterangan + '</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table-pengikut' ), html );
+
+		},
+		
+		tambahPengikut: function( id ) {
+			
+			var id = sppdDomain.currentId;
+			
+			$( '#form-pengikut-nama' ).val( '' );
+			$( '#form-pengikut-tanggal-lahir' ).val( '' );
+			$( '#form-pengikut-keterangan' ).val( '' );
+			
+		},
+		
+		hapus: function( id ) {
+			sppdRestAdapter.delete( id, sppdDomain.success );
 		}
 	}
 };
