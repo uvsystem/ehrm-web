@@ -245,6 +245,17 @@ var pegawaiRestAdapter = {
 		);
 	},
 	
+	findAll: function( callback ) {
+
+		ehrmRestAdapter.call( '/pegawai', null, 'GET',
+			function( result ) {
+				message.writeLog( "Mengambil pegawai: " + ( result.list ? result.list.length : 0 ) ); // LOG
+				callback( result );
+			},
+			message.error
+		);
+	},
+	
 	search: function( keyword, callback ) {
 
 		ehrmRestAdapter.call( '/pegawai/search/' + keyword, null, 'GET',
@@ -416,7 +427,7 @@ var absenRestAdapter = {
 
 	hadir: function( nip, tanggal, pagi, cek1, cek2, sore, callback ) {
 
-		var hadirObject = { pagi: pagi, cek1: cek1, cek2: cek2, sore: sore };
+		var hadirObject = { pagiStr: pagi, cek1Str: cek1, cek2Str: cek2, soreStr: sore };
 		
 		ehrmRestAdapter.call( '/absen/' + nip + '/hadir/' + tanggal, hadirObject, 'POST',
 			function( result ) {
@@ -455,6 +466,39 @@ var absenRestAdapter = {
 			function( result ) {
 				callback( result );
 				message.writeLog( "Menyimpan absen cuti: " + nip + ":" + tanggal ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	findBySatker: function( kode, tanggal, callback ) {
+
+		ehrmRestAdapter.call( '/absen/satker/' + kode + '/tanggal/' + tanggal, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil absen: " + kode + ":" + tanggal ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	search: function( keyword, callback ) {
+
+		ehrmRestAdapter.call( '/absen/search/' + keyword, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil absen: " + keyword ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	"delete": function( id, status, callback ) {
+
+		ehrmRestAdapter.call( '/absen/' + id + '/status/' + status, null, 'DELETE',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menghapus absen: " + status + ":" + id ); // LOG
 			},
 			message.error
 		);

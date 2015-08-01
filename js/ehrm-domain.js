@@ -163,7 +163,7 @@ var unitKerjaDomain = {
 					'</div>' +
 					'</td>' +
 					'</tr>';
-				
+					
 			}
 			
 			page.change( $( '#table' ), html );
@@ -352,7 +352,7 @@ var pegawaiDomain = {
 			
 			var tmp = listPegawai[ index ];
 			
-			message.writeLog( tmp.nip + ': ' + ( tmp.nip == nip ) ); // LOG
+			message.writeLog( '_' + tmp.nip + '_:_' + nip + '_' ); // LOG
 			
 			if ( tmp.nip == nip)
 				return tmp;
@@ -384,14 +384,21 @@ var pegawaiDomain = {
 					'<td>' + tmp.nama + '</td>' +
 					'<td>' + (tmp.unitKerja.parent ? tmp.unitKerja.nama + ' - ' + tmp.unitKerja.parent.nama : tmp.unitKerja.nama) + '</td>' +
 					'<td>' +
-					'<div class="btn-group btn-group-xs">' +
-					'<button type="button" class="btn btn-danger" onclick="pegawaiDomain.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</button>' +
-					'<button type="button" class="btn btn-primary" onclick="pegawaiDomain.content.openMutasi(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-mutasi">Mutasi</button>' +
-					'<button type="button" class="btn btn-warning" onclick="pegawaiDomain.content.openPromosiPangkat(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-promosi-pangkat">Pangkat</button>' +
-					'<button type="button" class="btn btn-success" onclick="pegawaiDomain.content.openPromosiJabatan(' + tmp.id + ', ' + tmp.unitKerja.id + ')" data-toggle="modal" data-target="#modal-form-promosi-jabatan">Jabatan</button>' +
+					'<div class="btn-group">' +
+					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+						'Pilihan <span class="caret"></span>' +
+					  '</button>' +
+					  '<ul class="dropdown-menu">' +
+						'<li><a href="#" onclick="pegawaiDomain.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</a></li>' +
+						'<li role="separator" class="divider"></li>' +
+						'<li><a href="#" onclick="pegawaiDomain.content.openMutasi(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-mutasi">Mutasi</a></li>' +
+						'<li><a href="#" onclick="pegawaiDomain.content.openPromosiPangkat(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-promosi-pangkat">Promosi Pangkat</a></li>' +
+						'<li><a href="#" onclick="pegawaiDomain.content.openPromosiJabatan(' + tmp.id + ', ' + tmp.unitKerja.id + ')" data-toggle="modal" data-target="#modal-form-promosi-jabatan">Promosi Jabatan</a></li>' +
+					  '</ul>' +
 					'</div>' +
 					'</td>' +
 					'</tr>';
+
 				
 			}
 			
@@ -573,29 +580,56 @@ var absenDomain = {
 	load: function( list ) {
 		
 		page.setName( absenDomain.nama );
+		page.load( $( '#content' ), 'html/absen.html' );
 		
-		absenDomain.content.getContent();
 		absenDomain.content.setData( list );
+
+		page.change( $( '#list-satuan-kerja' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
 		
+		pegawaiRestAdapter.findAll( function( result ) {
+			storage.set( ( result ? result.list : [] ), pegawaiDomain.nama );
+			page.change( $( '#list-nip' ), page.list.option.generateNip( ( result ? result.list : [] ) ) );
+		});
 	},
 	
 	reload: function() {
 
 		page.setName( absenDomain.nama );
-		
-		absenDomain.content.getContent();
+		this.load( [] );
 		
 	},
 
+	getStatusNumber: function( status ) {
+		switch( status ) {
+			case 'HADIR': return 1;
+				break;
+			case 'SAKIT': return 2;
+				break;
+			case 'IZIN': return 3;
+				break;
+			case 'CUTI': return 4;
+				break;
+			case 'TUGAS LUAR': return 5;
+				break;
+		}
+	},
+	
+	getStatus: function( number ) {
+		switch( number ) {
+			case 1: return 'HADIR';
+				break;
+			case 2: return 'SAKIT';
+				break;
+			case 3: return 'IZIN';
+				break;
+			case 4: return 'CUTI';
+				break;
+			case 5: return 'TUGAS LUAR';
+				break;
+		}
+	},
+	
 	content: {
-
-		getContent: function() {
-
-			page.load( $( '#content' ), 'html/absen.html' );
-
-			page.change( $( '#list-unitkerja' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
-			
-		},
 
 		getObject: function() {
 		
@@ -627,24 +661,28 @@ var absenDomain = {
 				var tmp = list[ index ];
 				
 				html += '<tr>' +
-					'<td>' + tmp.pegawaiDomain.nip + '</td>' +
-					'<td>' + tmp.pegawaiDomain.nama + '</td>' +
-					'<td>' + tmp.tanggalStr + '</td>' +
-					'<td>' + tmp.status + '</td>' +
-					'<td>' + tmp.pagiStr + '</td>' +
-					'<td>' + tmp.tengahStr + '</td>' +
-					'<td>' + tmp.siangStr + '</td>' +
-					'<td>' + tmp.soreStr + '</td>' +
-					'<td>' + ( !tmp.keterangan ? '' : tmp.keterangan ) + '</td>';
+					'<td>' + tmp.pegawai.nip + '</td>' +
+					'<td>' + tmp.pegawai.nama + '</td>' +
+					'<td>' + tmp.tanggal + '</td>' +
+					'<td>' + tmp.tipe + '</td>' +
+					'<td>' + ( tmp.pagi ? tmp.pagi : '-' )+ '</td>' +
+					'<td>' + ( tmp.pengecekanPertama ? tmp.pengecekanPertama : '-' ) + '</td>' +
+					'<td>' + ( tmp.pengecekanKedua ? tmp.pengecekanKedua : '-' ) + '</td>' +
+					'<td>' + ( tmp.sore ? tmp.sore : '-' ) + '</td>';
 				
-					if ( operator.getRole() == 'ADMIN' && tmp.status == 'HADIR' ) {
+					if ( operator.getRole() == 'ADMIN' && tmp.tipe == 'HADIR' ) {
 						html += '<td>' +
 						'<div class="btn-group btn-group-xs">' +
-						'<button type="button" class="btn btn-danger" onclick="absenDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-absenDomain">Detail</button>' +
+						'<button type="button" class="btn btn-info" onclick="absenDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-absen">Detail</button>' +
+						'<button type="button" class="btn btn-danger" onclick="absenDomain.content.delete(' + tmp.id + ', ' + absenDomain.getStatusNumber( tmp.tipe ) + ')">Hapus</button>' +
 						'</div>' +
 						'</td>';
-					} else {
-						html += '<td>&nbsp</td>';
+					} else if ( operator.getRole() == 'ADMIN' ) {
+						html += '<td>' +
+						'<div class="btn-group btn-group-xs">' +
+						'<button type="button" class="btn btn-danger" onclick="absenDomain.content.delete(' + tmp.id + ', ' + absenDomain.getStatusNumber( tmp.tipe ) + ')">Hapus</button>' +
+						'</div>' +
+						'</td>';
 					}
 					
 					html += '</tr>';
@@ -657,22 +695,25 @@ var absenDomain = {
 		setDetail: function( id ) {
 
 			var obj = storage.getById( absenDomain, id );
-
-			this.resetForm( obj );
+			
+			$( '#form-absen-nip' ).val( obj.pegawai.nip );
+			$( '#form-absen-nama' ).val( obj.pegawai.nama );
+			$( '#form-absen-tanggal' ).val( obj.tanggal );
+			$( '#form-absen-pagi' ).val( obj.pagi );
+			$( '#form-absen-tengah' ).val( obj.pengecekanPertama );
+			$( '#form-absen-siang' ).val( obj.pengecekanKedua );
+			$( '#form-absen-sore' ).val( obj.sore );
 
 		},
-	
-		resetForm: function( obj ) {
+
+		"delete": function( id, statusNumber ) {
+			var status = absenDomain.getStatus( statusNumber );
 			
-			$( '#form-absen-nip' ).val( obj.pegawaiDomain.nip );
-			$( '#form-absen-nama' ).val( obj.pegawaiDomain.nama );
-			$( '#form-absen-tanggal' ).val( obj.tanggal );
-			$( '#form-absen-pagi' ).val( obj.pagiStr );
-			$( '#form-absen-tengah' ).val( obj.tengahStr);
-			$( '#form-absen-siang' ).val( obj.siangStr );
-			$( '#form-absen-sore' ).val( obj.soreStr );
+			absenRestAdapter.delete( id, status, function( result ) {
+				message.success( result );
+				absenDomain.reload();
+			});
 		}
-		
 	}
 	
 };

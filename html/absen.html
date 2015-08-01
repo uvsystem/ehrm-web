@@ -1,37 +1,6 @@
 <datalist id="list-nip"></datalist>
 
 <div class="row">
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" id="btn-absen-tambah" data-toggle="modal" data-target="#modal-form-absen" href="#">
-				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Absen</b>
-			</div>
-		</a>
-	</div>
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" id="btn-absen-sakit" data-toggle="modal" data-target="#modal-form-sakit" href="#">
-				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Sakit</b>
-			</div>
-		</a>
-	</div>
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" id="btn-absen-izin" data-toggle="modal" data-target="#modal-form-izin" href="#">
-				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Izin</b>
-			</div>
-		</a>
-	</div>
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" id="btn-absen-cuti" data-toggle="modal" data-target="#modal-form-cuti" href="#">
-				<span class="glyphicon glyphicon-calendar big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Cuti</b>
-			</div>
-		</a>
-	</div>
-</div>
-
-<div class="row">
 	<div class="col-md-12"><!-- table -->
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -47,42 +16,43 @@
 								<th class="center">10:00</th>
 								<th class="center">13:00</th>
 								<th class="center">16:00</th>
-								<th class="center">Keterangan</th>
 								<th class="center">&nbsp</th>
 							</tr>
 						</thead>
 						<tbody id="table">
 						</tbody>
 					</table>
-					<div>
-						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward"></a>
-						<a id="pageNumber">1</a>
-						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward"></a>
-					</div>
 				</div>
 			</div><!-- body -->
 			<div class="panel-footer">
 				<div class="row">
 					<div class="col-md-2">
-						<div class="input-group">
-							<input type="text" id="absen-skpd" list="list-skpd" class="form-control" placeholder="Pilih SKPD" aria-describedby="basic-addon1" />
-							<datalist id="list-skpd"></datalist>
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
+						<a id="pageNumber">1</a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-2">
+						<div class="btn-group">
+						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Tambah <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+							<li><a id="btn-absen-tambah" data-toggle="modal" data-target="#modal-form-absen" href="#">Tambah Hadir</a></li>
+							<li><a id="btn-absen-sakit" data-toggle="modal" data-target="#modal-form-sakit" href="#">Tambah Sakit</a></li>
+							<li><a id="btn-absen-izin" data-toggle="modal" data-target="#modal-form-izin" href="#">Tambah Izin</a></li>
+							<li><a id="btn-absen-cuti" data-toggle="modal" data-target="#modal-form-cuti" href="#">Tambah Cuti</a></li>
+						  </ul>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="input-group">
-							<input type="text" id="absen-bagian" list="list-bagian" class="form-control" placeholder="Pilih Bagian" aria-describedby="basic-addon1" />
-							<datalist id="list-bagian"></datalist>
+							<input type="text" id="absen-satuan-kerja" list="list-satuan-kerja" class="form-control" placeholder="Pilih Satuan Kerja" aria-describedby="basic-addon1" />
+							<datalist id="list-satuan-kerja"></datalist>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<div class="input-group">
-							<input type="date" id="absen-tanggal-awal" class="form-control" placeholder="Tanggal Awal" aria-describedby="basic-addon1" />
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="input-group">
-							<input type="date" id="absen-tanggal-akhir" class="form-control" placeholder="Tanggal Akhir" aria-describedby="basic-addon1" />
+							<input type="date" id="absen-tanggal" class="form-control" placeholder="Masuka Tanggal" aria-describedby="basic-addon1" />
 						</div>
 					</div>
 					<div class="col-md-1">
@@ -99,7 +69,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
-				<h4 class="modal-title">Data Absen</h4>
+				<h4 class="modal-title">Hadir</h4>
 	        </div>
 	        <div class="modal-body">
 				<form role="form">
@@ -160,7 +130,7 @@
 					</div>
 					<div class="form-group">
 						<label for="form-absen-sakit-keterangan" class="control-label">Keterangan</label>
-						<input type="text" class="form-control" id="form-absen-sakit-keterangan" placeholder="Masukan Keterangan" />
+						<input type="text" class="form-control" id="form-absen-sakit-keterangan" placeholder="Masukan Keterangan" readonly />
 					</div>
 				</form>
 	        </div><!-- modal-body -->
@@ -191,7 +161,7 @@
 					</div>
 					<div class="form-group">
 						<label for="form-absen-izin-keterangan" class="control-label">Keterangan</label>
-						<input type="text" class="form-control" id="form-absen-izin-keterangan" placeholder="Masukan Keterangan" />
+						<input type="text" class="form-control" id="form-absen-izin-keterangan" placeholder="Masukan Keterangan" readonly />
 					</div>
 				</form>
 	        </div><!-- modal-body -->
@@ -222,7 +192,7 @@
 					</div>
 					<div class="form-group">
 						<label for="form-absen-cuti-keterangan" class="control-label">Keterangan</label>
-						<input type="text" class="form-control" id="form-absen-cuti-keterangan" placeholder="Masukan Keterangan" />
+						<input type="text" class="form-control" id="form-absen-cuti-keterangan" placeholder="Masukan Keterangan" readonly />
 					</div>
 				</form>
 	        </div><!-- modal-body -->

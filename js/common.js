@@ -1227,6 +1227,9 @@ var operator = {
 	 */
 	getRole: function() {
 
+		if ( this.getUsername() == 'superuser' )
+			return 'ADMIN';
+	
 		var pegawai;
 		
 		try {
