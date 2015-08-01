@@ -585,11 +585,10 @@ var absenDomain = {
 		absenDomain.content.setData( list );
 
 		page.change( $( '#list-satuan-kerja' ), page.list.option.generateFromStorage( unitKerjaDomain.nama ) );
+
+		var listPegawai = storage.get( pegawaiDomain .nama );
+		page.change( $( '#list-nip' ), page.list.option.generateNip( listPegawai ) );
 		
-		pegawaiRestAdapter.findAll( function( result ) {
-			storage.set( ( result ? result.list : [] ), pegawaiDomain.nama );
-			page.change( $( '#list-nip' ), page.list.option.generateNip( ( result ? result.list : [] ) ) );
-		});
 	},
 	
 	reload: function() {
@@ -722,46 +721,142 @@ var absenDomain = {
 /**
  *
  */
-var suratTugasDomain = {
+var sptDomain = {
 	
 	nama: 'SURAT TUGAS',
 	
 	currentObject: null,
 	
+	currentId: 0,
+	
 	defaultObject: {},
 	
 	success: function( result ) {
-		
+		message.success( result );
+		sptDomain.reload();
 	},
 	
 	reload: function() {
-		throw new Error( 'reload' );
+
+		var awal = myDate.getAwal();
+		var akhir = myDate.getAkhir();
+		
+		suratTugasRestAdapter.findByTanggal( awal.getFormattedString(), akhir.getFormattedString(), function( result ) {
+				sptDomain.load( result.list );
+				storage.set( result.list, sptDomain.nama );
+			}
+		);
 	},
 	
 	load: function( list ) {
+	
+		page.setName( sptDomain.nama );
+		page.load( $( '#content' ), 'html/spt.html' );
+
+		sptDomain.content.setData( list );
+
+		storage.set( list, sptDomain.nama );
+		
+		page.change( $( '#list-satuan-kerja' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satuan-kerja') );
+
+		var listPegawai = storage.get( pegawaiDomain .nama );
+		page.change( $( '#list-nip' ), page.list.option.generateNip( listPegawai ) );
 		
 	},
 	
 	content: {
 		
 		setData: function( list, pageNumber ) {
+
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = pegawaiDomain;
+			activeContainer.list = list;
 			
-		},
-		
-		getContent: function( list ) {
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';	
 			
-		},
-		
-		getObject: function() {
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
 			
+				var tmp = list[ index ];
+
+				html += '<tr href="#" onclick="sptDomain.content.loadPemegangTugas(' + tmp.id + ')">' +
+					'<td>' + tmp.nomor + '</td>' +
+					'<td>' + tmp.tanggal + '</td>' +
+					'<td>' + tmp.status + '</td>' +
+					'<td>' +
+					'<div class="btn-group">' +
+					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+						'Pilihan <span class="caret"></span>' +
+					  '</button>' +
+					  '<ul class="dropdown-menu">' +
+						'<li><a href="#" onclick="sptDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-spt">Detail</a></li>' +
+						'<li><a href="#" onclick="sptDomain.content.tambahPemegangTugas(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pemegang-tugas">Tambah Pegawai</a></li>' +
+						'<li><a href="#" onclick="sptDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
+					  '</ul>' +
+					'</div>' +
+					'</td>' +
+					'</tr>';
+
+				
+			}
+			
+			page.change( $( '#table' ), html );
+
 		},
 		
 		setDetail: function( id ) {
 			
+			var suratTugas = storage.getById( sptDomain, id );
+			
+			sptDomain.currentId = suratTugas.id;
+			$( '#form-spt-nomor' ).val( suratTugas.nomor );
+			$( '#form-spt-jumlah-hari' ).val( suratTugas.jumlahHari );
+			$( '#form-spt-tujuan' ).val( suratTugas.tujuan );
+			$( '#form-spt-maksud' ).val( suratTugas.maksud );
 		},
 		
-		resetForm: function( obj ) {
+		loadPemegangTugas: function( id ) {
 			
+			var suratTugas = storage.getById( sptDomain, id );
+			var list = suratTugas.daftarPemegangTugas;
+			var pageNumber = 0;
+			
+			if ( !list )
+				list = [ ];
+	
+			activeContainer = pegawaiDomain;
+			activeContainer.list = list;
+			
+			var firstLast = tableSet( list, pageNumber );
+	
+			var html = '';
+			
+			for ( var index = firstLast.first; index < firstLast.last; index++ ) {
+			
+				var tmp = list[ index ];
+
+				html += '<tr>' +
+					'<td>' + tmp.pegawai.nip + '</td>' +
+					'<td>' + tmp.pegawai.nama + '</td>' +
+					'</tr>';
+				
+			}
+			
+			page.change( $( '#table-pemegang-tugas' ), html );
+
+		},
+		
+		tambahPemegangTugas: function( id ) {
+			
+			sptDomain.currentId = id;
+			$( '#form-pemegang-tugas-nip' ).val( '' );
+		},
+		
+		hapus: function( id ) {
+			suratTugasRestAdapter.delete( id, sptDomain.success );
 		}
 	}
 };

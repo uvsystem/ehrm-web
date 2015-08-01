@@ -104,6 +104,13 @@ $( document ).ready( function () {
 
 	} );
 
+	$( document ).on( 'click', '#menu-spt', function() {
+		
+		page.change( $( '#message' ), '');
+		sptDomain.reload();
+
+	} );
+
 	
 	
 	// Table Handler
@@ -378,6 +385,8 @@ $( document ).ready( function () {
 	} );
 
 	$( document ).on( 'change', '#text-pegawai-satuan-kerja', function() {
+		
+		page.change( $( '#message' ), '');
 		var satker = storage.getByNama( unitKerjaDomain, $( '#text-pegawai-satuan-kerja' ).val() );
 		
 		pegawaiRestAdapter.findBySatker( satker.id, function( result ) {
@@ -415,6 +424,8 @@ $( document ).ready( function () {
 	} );
 
 	$( document ).on( 'change', '#text-jabatan-satuan-kerja', function() {
+		
+		page.change( $( '#message' ), '');
 		var satker = storage.getByNama( unitKerjaDomain, $( '#text-jabatan-satuan-kerja' ).val() );
 		
 		jabatanRestAdapter.findBySatker( satker.id, function( result ) {
@@ -436,6 +447,8 @@ $( document ).ready( function () {
 	} );
 	
 	$( document ).on( 'change', '#text-tanggal-awal', function() {
+		page.change( $( '#message' ), '');
+
 		var awalStr = $( '#text-tanggal-awal' ).val();
 		var akhirStr = $( '#text-tanggal-akhir' ).val();
 		
@@ -453,6 +466,9 @@ $( document ).ready( function () {
 	} );
 	
 	$( document ).on( 'change', '#text-tanggal-akhir', function() {
+
+		page.change( $( '#message' ), '');
+		
 		var awalStr = $( '#text-tanggal-awal' ).val();
 		var akhirStr = $( '#text-tanggal-akhir' ).val();
 		
@@ -468,6 +484,48 @@ $( document ).ready( function () {
 			});
 		}
 	} );
+	
+	
+	// SPT Controller
+	$( document ).on( 'click', '#btn-spt-tambah', function() {
+		$( '#form-spt-nomor' ).val( '' );
+		$( '#form-spt-jumlah-hari' ).val( '' );
+		$( '#form-spt-tujuan' ).val( '' );
+		$( '#form-spt-maksud' ).val( '' );
+	} );
+	
+	$( document ).on( 'click', '#btn-simpan-spt', function() {
+
+		var id = sptDomain.currentId;
+		var nomor = $( '#form-spt-nomor' ).val();
+		var jumlahHari = $( '#form-spt-jumlah-hari' ).val();
+		var tujuan = $( '#form-spt-tujuan' ).val();
+		var maksud = $( '#form-spt-maksud' ).val();
+	
+		suratTugasRestAdapter.add( id, nomor, jumlahHari, tujuan, maksud, sptDomain.success );
+	} );
+
+	$( document ).on( 'click', '#btn-simpan-pemegang-tugas', function() {
+		
+		var id = sptDomain.currentId;
+		var nip = $( '#form-pemegang-tugas-nip' ).val();
+		
+		suratTugasRestAdapter.addPemegangTugas( id, nip, sptDomain.success );
+	} );
+
+	$( document ).on( 'change', '#spt-satuan-kerja', function() {
+
+		page.change( $( '#message' ), '');
+
+		var satuanKerja = storage.getByNama( unitKerjaDomain, $( '#spt-satuan-kerja' ).val() );
+		
+		suratTugasRestAdapter.findBySatker( satuanKerja.singkatan, function( result ) {
+			sptDomain.load( result.list );
+			$( '#spt-satuan-kerja' ).val( satuanKerja.nama )
+		});
+	} );
+
+	
 	
 	// Cari Handler.
 	$( document ).on( 'focus', '#search', function() {
@@ -510,6 +568,13 @@ $( document ).ready( function () {
 		
 			jabatanRestAdapter.search( kataKunci, function( result ) {
 				jabatanDomain.load( result.list );
+			});
+			
+			
+		} else if ( halaman == sptDomain.nama ) {
+		
+			suratTugasRestAdapter.search( kataKunci, function( result ) {
+				sptDomain.load( result.list );
 			});
 			
 		} else if ( halaman == absenDomain.nama ) {

@@ -558,6 +558,47 @@ var kalendarRestAdapter = {
 
 var suratTugasRestAdapter = {
 	
+	add: function( id, nomor, jumlahHari, tujuan, maksud, callback ) {
+
+		var suratTugas = {
+			id: id,
+			nomor: nomor,
+			jumlahHari: jumlahHari,
+			tujuan: tujuan,
+			maksud: maksud
+		};
+		
+		ehrmRestAdapter.call( '/suratTugas/langsung', suratTugas, 'POST',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menambah surat tugas: " + result.object ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	addPemegangTugas: function( id, nip, callback ) {
+		
+		ehrmRestAdapter.call( '/suratTugas/' + id + '/pegawai/' + nip, null, 'POST',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menambah pemegang tugas: " + nip + ' pada ' + id ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	"delete": function( id, callback ) {
+		
+		ehrmRestAdapter.call( '/suratTugas/' + id, null, 'DELETE',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Menghapus surat tugas: " + id ); // LOG
+			},
+			message.error
+		);
+	},
+	
 	request: function( nip, nomor, jumlahHari, tujuan, maksud, daftarPegawai, callback ) {
 
 		var suratTugas = {
@@ -571,7 +612,7 @@ var suratTugasRestAdapter = {
 		ehrmRestAdapter.call( '/suratTugas/' + nip, suratTugas, 'POST',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Berhasil request surat tugas: " + result.object ); // LOG
+				message.writeLog( "Merequest surat tugas: " + result.object ); // LOG
 			},
 			message.error
 		);
@@ -632,9 +673,42 @@ var suratTugasRestAdapter = {
 		);
 	},
 	
+	findByTanggal: function( awal, akhir, callback ) {
+
+		ehrmRestAdapter.call( '/suratTugas/awal/' + awal + '/akhir/' + akhir, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	findBySatker: function( kode, callback ) {
+
+		ehrmRestAdapter.call( '/suratTugas/satker/' + kode, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
 	findByPegawai: function( nip, callback ) {
 
 		ehrmRestAdapter.call( '/suratTugas/' + nip, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG
+			},
+			message.error
+		);
+	},
+	
+	search: function( keyword, callback ) {
+
+		ehrmRestAdapter.call( '/suratTugas/search/' + keyword, null, 'GET',
 			function( result ) {
 				callback( result );
 				message.writeLog( "Mengambil surat tugas: " + ( result.list ? result.list.length : 0 ) ); // LOG

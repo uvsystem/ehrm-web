@@ -973,8 +973,14 @@ var storage = {
 	},
 
 	reset: function () {
+		
+		pegawaiRestAdapter.findAll( function( result ) {
+			storage.set( ( result ? result.list : [] ), pegawaiDomain.nama );
+		});
 
-		this.fill ('Satker');
+		unitKerjaRestAdapter.all( function( result ) {
+			storage.set( ( result ? result.list : [] ), unitKerjaDomain.nama );
+		});
 
 	},
 
