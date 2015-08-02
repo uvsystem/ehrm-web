@@ -922,10 +922,10 @@ var sppdDomain = {
 			
 				var tmp = list[ index ];
 
-				html += '<tr href="#" onclick="sptDomain.content.loadPengikut(' + tmp.id + ')">' +
+				html += '<tr href="#" onclick="sppdDomain.content.loadPengikut(' + tmp.id + ')">' +
 					'<td>' + tmp.nomor + '</td>' +
-					'<td>' + tmp.pemegangTugas.pegawai.nip + '</td>' +
-					'<td>' + tmp.tanggalBerangkat + '</td>' +
+					'<td>' + tmp.nip + '</td>' +
+					'<td>' + tmp.berangkat + '</td>' +
 					'<td>' +
 					'<div class="btn-group">' +
 					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -933,7 +933,7 @@ var sppdDomain = {
 					  '</button>' +
 					  '<ul class="dropdown-menu">' +
 						'<li><a href="#" onclick="sppdDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-sppd">Detail</a></li>' +
-						'<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pegawai</a></li>' +
+						'<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pengikut</a></li>' +
 						'<li><a href="#" onclick="sppdDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
 					  '</ul>' +
 					'</div>' +
@@ -952,10 +952,11 @@ var sppdDomain = {
 			var sppd = storage.getById( sppdDomain, id );
 			
 			sppdDomain.currentId = sppd.id;
-			$( '#form-sppd-nip' ).val( sppd.pemegangTugas.pegawai.nip );
+			$( '#form-sppd-nip' ).val( sppd.nip );
 			$( '#form-sppd-nomor-spt' ).val( sppd.nomorSuratTugas );
 			$( '#form-sppd-nomor' ).val( sppd.nomor );
-			$( '#form-sppd-tanggal-berangkat' ).val( sppd.berangkat );
+			var tanggal = myDate.fromFormattedString( sppd.berangkat );
+			$( '#form-sppd-tanggal-berangkat' ).val( tanggal.getDatePickerString() );
 			$( '#form-sppd-transportasi' ).val( sppd.modaTransportasi );
 			$( '#form-sppd-kode-rekening' ).val( sppd.kodeRekening );
 			$( '#form-sppd-nomor-dpa' ).val( sppd.nomorDpa );
@@ -964,9 +965,11 @@ var sppdDomain = {
 		},
 		
 		loadPengikut: function( id ) {
-			
+
+			sppdDomain.currentId = id;
+		
 			var sppd = storage.getById( sppdDomain, id );
-			var list = suratTugas.daftarPengikut;
+			var list = sppd.daftarPengikut;
 			var pageNumber = 0;
 			
 			if ( !list )

@@ -530,7 +530,6 @@ $( document ).ready( function () {
 	$( document ).on( 'click', '#btn-sppd-tambah', function() {
 	
 		sppdDomain.currentId = 0;
-		/*
 		$( '#form-sppd-nip' ).val( '' );
 		$( '#form-sppd-nomor-spt' ).val( '' );
 		$( '#form-sppd-nomor' ).val( '' );
@@ -539,7 +538,6 @@ $( document ).ready( function () {
 		$( '#form-sppd-kode-rekening' ).val( '' );
 		$( '#form-sppd-nomor-dpa' ).val( '' );
 		$( '#form-sppd-tingkat' ).val( '' );
-		*/
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-sppd', function() {
@@ -562,7 +560,7 @@ $( document ).ready( function () {
 
 		var sppd = storage.getById( sppdDomain, sppdDomain.currentId );
 		var nama = $( '#form-pengikut-nama' ).val();
-		var tanggaLahir = myDate.fromDatePicker( $( '#form-pengikut-tanggal-lahir' ).val() );
+		var tanggalLahir = myDate.fromDatePicker( $( '#form-pengikut-tanggal-lahir' ).val() );
 		var keterangan = $( '#form-pengikut-keterangan' ).val();
 		
 		sppdRestAdapter.addFollower( sppd.nomor, nama, tanggalLahir.getFormattedString(), keterangan, sppdDomain.success );
@@ -626,11 +624,16 @@ $( document ).ready( function () {
 				jabatanDomain.load( result.list );
 			});
 			
-			
 		} else if ( halaman == sptDomain.nama ) {
 		
 			suratTugasRestAdapter.search( kataKunci, function( result ) {
 				sptDomain.load( result.list );
+			});
+			
+		} else if ( halaman == sppdDomain.nama ) {
+		
+			sppdRestAdapter.search( kataKunci, function( result ) {
+				sppdDomain.load( result.list );
 			});
 			
 		} else if ( halaman == absenDomain.nama ) {
