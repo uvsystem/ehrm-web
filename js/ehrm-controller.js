@@ -111,6 +111,13 @@ $( document ).ready( function () {
 
 	} );
 
+	$( document ).on( 'click', '#menu-aplikasi', function() {
+		
+		page.change( $( '#message' ), '');
+		aplikasiDomain.reload();
+
+	} );
+
 	
 	
 	// Table Handler
