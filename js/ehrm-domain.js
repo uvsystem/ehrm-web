@@ -175,6 +175,11 @@ var aplikasiDomain = {
 					'<td>' + tmp.nip + '</td>' +
 					'<td>' + tmp.nama + '</td>' +
 					'<td>' + tmp.role + '</td>' +
+					'<td>' +
+					'<div class="btn-group btn-group-xs">' +
+					'<button type="button" class="btn btn-danger" onclick="aplikasiDomain.content.hapusOperator(' + tmp.id + ')">Hapus</button>' +
+					'</div>' +
+					'</td>' +
 					'</tr>';
 				
 			}
