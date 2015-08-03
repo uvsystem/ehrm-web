@@ -13,8 +13,13 @@
  */
 
 var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
+var kodeAplikasi;
  
 $( document ).ready( function () {
+
+	aplikasiRestAdapter.findKode( function( result ) {
+		kodeAplikasi = result.object;
+	});
 
 	if ( operator.isLogin() == false ) {
 		
@@ -23,9 +28,9 @@ $( document ).ready( function () {
 		
 	}
 	
-	if ( operator.getTokenString == '********' && operator.getPegawai() ) {
+	if ( operator.getTokenString != '********' && operator.getPegawai() ) {
 		
-		if ( ( operator.getRole() != 'ADMIN' && operator.getRole() != 'PEGAWAI' ) ) {
+		if ( ( operator.getRole() != 'ADMIN' && operator.getRole() != 'OPERATOR' ) ) {
 			
 			message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
 			message.writeLog( 'Maaf, anda tidak bisa mengakses halaman ini' ); // LOG
@@ -42,7 +47,7 @@ $( document ).ready( function () {
 	page.change( $( '#operator-nama' ), operator.getName() );
 	page.setName( 'HOME' );
 	
-	message.writeLog( operator.getUsername() );
+	message.writeLog( "Username: " + operator.getUsername() );
 	var navDef = navigation( operator.getUsername() == 'superuser' ? 'ADMIN' : operator.getRole() );
 	page.change( $( '#nav-menu' ), navDef );
 
@@ -118,6 +123,12 @@ $( document ).ready( function () {
 
 	} );
 
+	$( document ).on( 'click', '#nav-logout', function() {
+		
+		page.change( $( '#message' ), '');
+		restAdapter.logout();
+
+	} );
 	
 	
 	// Table Handler
@@ -585,7 +596,50 @@ $( document ).ready( function () {
 			$( '#sppd-satuan-kerja' ).val( satuanKerja.nama )
 		});
 	} );
+
+
+
+	// Aplikasi Controller
+	$( document ).on( 'click', '#btn-aplikasi-tambah', function() {
 	
+		aplikasiDomain.currentId = 0;
+		$( '#form-aplikasi-kode' ).val( '' );
+		$( '#form-aplikasi-nama' ).val( '' );
+		$( '#form-aplikasi-url' ).val( '' );
+		
+	} );
+	
+	$( document ).on( 'click', '#btn-simpan-aplikasi', function() {
+
+		var id = aplikasiDomain.currentId;
+		var kode = $( '#form-aplikasi-kode' ).val();
+		var nama = $( '#form-aplikasi-nama' ).val();
+		var url = $( '#form-aplikasi-url' ).val();
+		
+		aplikasiRestAdapter.add( id, kode, nama, url, aplikasiDomain.success );
+		
+	} );
+
+	$( document ).on( 'click', '#btn-simpan-operator', function() {
+
+		var aplikasi = storage.getById( aplikasiDomain, aplikasiDomain.currentId );
+		var nip = $( '#form-operator-nip' ).val();
+		var role = aplikasiDomain.roleOperator;;
+
+		if ( role == 'ADMIN' ) {
+			aplikasiRestAdapter.addAdmin( aplikasi.kode, nip, aplikasiDomain.success );
+		} if ( role == 'OPERATOR' ) {
+			aplikasiRestAdapter.addOperator( aplikasi.kode, nip, aplikasiDomain.success );
+		}
+	} );
+
+	$( document ).on( 'change', '#form-operator-nip', function() {
+		
+		var nip = $( '#form-operator-nip' ).val();
+		var pegawai = pegawaiDomain.getByNip( nip );
+		$( '#form-operator-nama' ).val( pegawai.nama );
+		
+	} );
 	
 	
 	// Cari Handler.

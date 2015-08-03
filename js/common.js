@@ -146,7 +146,7 @@ function rest( link, projectName) {
 		
 		url: link +'/' + projectName,
 	
-		call: function( path, data, method, success, error ) {
+		call: function( path, data, method, success, error, async ) {
 	
 			// Jika tidak login, redirect ke halaman login.
 			if ( operator.isLogin() == false ) {
@@ -155,6 +155,9 @@ function rest( link, projectName) {
 				return;
 					
 			}
+			
+			if ( async == null )
+				async = true;
 						
 			// Token menjadi pengganti password user.
 			var _password = operator.getTokenString();
@@ -166,9 +169,8 @@ function rest( link, projectName) {
 				{
 			        type: method,
 			        url: targetUrl,
-					
+					async: async,
 					contentType: 'application/json',
-				
 			        processData: false,
 			        data: JSON.stringify( data ),
 							
@@ -214,6 +216,7 @@ function rest( link, projectName) {
 			var method = object.method;
 			var success = object.success;
 			var error = object.error;
+			var async = object.async;
 				
 			if ( !path ) throw new Error( 'api.js: callAjax(): url is undefined' );
 	
@@ -225,7 +228,7 @@ function rest( link, projectName) {
 				
 			if ( !error ) error = message.log;
 				
-			this.call( path, data, method, success, error );
+			this.call( path, data, method, success, error, async );
 	
 		},
 		
@@ -269,7 +272,10 @@ function rest( link, projectName) {
 			};
 	
 		    promise.done( success );
-		    promise.fail( message.writeError );
+		    promise.fail( function( jqXHR, textStatus, errorThrown ) {
+				message.write( "Kombinasi username dan password salah" );
+				message.log( jqXHR, textStatus, errorThrown );
+			});
 			promise.always( function( jqXHR, textStatus ) {
 				if ( waitModal )
 					waitModal.hide();
@@ -1181,14 +1187,14 @@ var operator = {
 		try {
 			
 			token = this.getToken();
+		
+			return token.token;
 			
 		} catch ( e ) {
 			
 			throw e;
 			
 		}
-		
-		return token.token;
 	},
 		
 	/*
@@ -1201,16 +1207,43 @@ var operator = {
 		try {
 			
 			token = this.getToken();
+
+			return token.pegawai;
 			
 		} catch ( e ) {
 			
 			throw e;
 			
 		}
-
-		return token.pegawai;
 	},
+
+	getOperator: function() {
+
+		var pegawai;
+	
+		try {
+
+			pegawai = this.getPegawai();
+			var listOperator = pegawai.listOperator;
+			var size = listOperator.length;
+			
+			for ( var i = 0; i < size; i++ ) {
+				var tmp = listOperator[ i ];
+				
+				if ( tmp && tmp.kodeAplikasi == kodeAplikasi )
+					return tmp;
+			}
+			
+			message.writeLog( "Operator untuk aplikasi '" + kodeAplikasi + "' tidak ditemukan" ); // LOG
+			
+		} catch ( e ) {
+			
+			throw e;
+			
+		}
 		
+	},
+	
 	/*
 	 * Mengambil username dari pegawai yang berhasil login terakhir kali.
 	 * Sering digunakan untuk melakukan REST request.
@@ -1222,15 +1255,14 @@ var operator = {
 		try {
 			
 			pegawai = this.getPegawai();
+
+			return pegawai.nip;
 			
 		} catch ( e ) {
 			
 			throw e;
 			
 		}
-
-		return pegawai.nip;
-
 	},
 		
 	/*
@@ -1244,15 +1276,14 @@ var operator = {
 		try {
 			
 			pegawai = this.getPegawai();
+
+			return pegawai.nama;
 			
 		} catch ( e ) {
 			
 			throw e;
 			
 		}
-
-		return pegawai.nama;
-
 	},
 
 	/*
@@ -1264,20 +1295,19 @@ var operator = {
 		if ( this.getUsername() == 'superuser' )
 			return 'ADMIN';
 	
-		var pegawai;
+		var operator;
 		
 		try {
 			
-			pegawai = this.getPegawai();
+			operator = this.getOperator();
+			
+			return operator.role;
 			
 		} catch ( e ) {
 			
 			throw e;
 			
 		}
-
-		return pegawai.role;
-
 	},
 		
 	/*

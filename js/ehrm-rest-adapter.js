@@ -847,6 +847,18 @@ var sppdRestAdapter = {
 
 var aplikasiRestAdapter = {
 	
+	findKode: function( callback ) {
+
+		ehrmRestAdapter.call( '/aplikasi/kode', null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Mengambil kode aplikasi: " + result.object ); // LOG
+			},
+			message.error,
+			false // Synchronous Access
+		);
+	},
+	
 	add: function( id, kode, nama, url, callback ) {
 		
 		var aplikasi = {
@@ -903,7 +915,7 @@ var aplikasiRestAdapter = {
 		ehrmRestAdapter.call( '/aplikasi/' + kode +'/operator/' + nip, null, 'POST',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Menambah operator: " + nip + ' pada aplikasi: ' + aplikasi ); // LOG
+				message.writeLog( "Menambah operator: " + nip + ' pada aplikasi: ' + kode ); // LOG
 			},
 			message.error
 		);
@@ -920,23 +932,12 @@ var aplikasiRestAdapter = {
 		);
 	},
 	
-	deleteOperator: function( kode, nip, callback ) {
-
-		ehrmRestAdapter.call( '/aplikasi/' + kode +'/operator/' + nip, null, 'DELETE',
-			function( result ) {
-				callback( result );
-				message.writeLog( "Menghapus operator: " + nip + ' dari aplikasi: ' + aplikasi ); // LOG
-			},
-			message.error
-		);
-	},
-	
 	addAdmin: function( kode, nip, callback ) {
 
 		ehrmRestAdapter.call( '/aplikasi/' + kode +'/admin/' + nip, null, 'POST',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Menambah admin: " + nip + ' pada aplikasi: ' + aplikasi ); // LOG
+				message.writeLog( "Menambah admin: " + nip + ' pada aplikasi: ' + kode ); // LOG
 			},
 			message.error
 		);
@@ -953,14 +954,14 @@ var aplikasiRestAdapter = {
 		);
 	},
 	
-	deleteAdmin: function( kode, nip, callback ) {
+	deleteOperator: function( id, callback ) {
 
-		ehrmRestAdapter.call( '/aplikasi/' + kode +'/admin/' + nip, null, 'DELETE',
+		ehrmRestAdapter.call( '/aplikasi/operator/' + id, null, 'DELETE',
 			function( result ) {
 				callback( result );
-				message.writeLog( "Menghapus admin: " + nip + ' dari aplikasi: ' + aplikasi ); // LOG
+				message.writeLog( "Menghapus operator: " + id ); // LOG
 			},
 			message.error
 		);
-	}
+	},
 };

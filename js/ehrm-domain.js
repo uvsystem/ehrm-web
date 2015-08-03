@@ -64,6 +64,7 @@ var aplikasiDomain = {
 	currentObject: null,
 	
 	currentId: 0,
+	currentIdOperator: 0,
 	
 	defaultObject: {},
 	
@@ -88,6 +89,9 @@ var aplikasiDomain = {
 		aplikasiDomain.content.setData( list );
 
 		storage.set( list, aplikasiDomain.nama );
+
+		var listPegawai = storage.get( pegawaiDomain .nama );
+		page.change( $( '#list-nip' ), page.list.option.generateNip( listPegawai ) );
 		
 	},
 	
@@ -109,19 +113,20 @@ var aplikasiDomain = {
 			
 				var tmp = list[ index ];
 
-				html += '<tr href="#" onclick="sppdDomain.content.loadPengikut(' + tmp.id + ')">' +
-					'<td>' + tmp.nomor + '</td>' +
-					'<td>' + tmp.nip + '</td>' +
-					'<td>' + tmp.berangkat + '</td>' +
+				html += '<tr href="#" onclick="aplikasiDomain.content.loadOperator(' + tmp.id + ')">' +
+					'<td>' + tmp.kode + '</td>' +
+					'<td>' + tmp.nama + '</td>' +
+					'<td>' + tmp.url + '</td>' +
 					'<td>' +
 					'<div class="btn-group">' +
 					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
 						'Pilihan <span class="caret"></span>' +
 					  '</button>' +
 					  '<ul class="dropdown-menu">' +
-						'<li><a href="#" onclick="sppdDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-sppd">Detail</a></li>' +
-						'<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pengikut</a></li>' +
-						'<li><a href="#" onclick="sppdDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
+						'<li><a href="#" onclick="aplikasiDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-aplikasi">Detail</a></li>' +
+						'<li><a href="#" onclick="aplikasiDomain.content.tambahAdmin(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-operator">Tambah Admin</a></li>' +
+						'<li><a href="#" onclick="aplikasiDomain.content.tambahOperator(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-operator">Tambah Operator</a></li>' +
+						'<li><a href="#" onclick="aplikasiDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
 					  '</ul>' +
 					'</div>' +
 					'</td>' +
@@ -135,26 +140,19 @@ var aplikasiDomain = {
 		},
 		
 		setDetail: function( id ) {
-			
-			var sppd = storage.getById( sppdDomain, id );
-			
-			sppdDomain.currentId = sppd.id;
-			$( '#form-sppd-nip' ).val( sppd.nip );
-			$( '#form-sppd-nomor-spt' ).val( sppd.nomorSuratTugas );
-			$( '#form-sppd-nomor' ).val( sppd.nomor );
-			var tanggal = myDate.fromFormattedString( sppd.berangkat );
-			$( '#form-sppd-tanggal-berangkat' ).val( tanggal.getDatePickerString() );
-			$( '#form-sppd-transportasi' ).val( sppd.modaTransportasi );
-			$( '#form-sppd-kode-rekening' ).val( sppd.kodeRekening );
-			$( '#form-sppd-nomor-dpa' ).val( sppd.nomorDpa );
-			$( '#form-sppd-tingkat' ).val( sppd.tingkat );
+
+			aplikasiDomain.currentId = id;
+			var aplikasi = storage.getById( aplikasiDomain, id );
+
+			$( '#form-aplikasi-kode' ).val( aplikasi.kode );
+			$( '#form-aplikasi-nama' ).val( aplikasi.nama );
+			$( '#form-aplikasi-url' ).val( aplikasi.url );
 			
 		},
 		
 		loadOperator: function( id ) {
 
-			operatorDomain.currentId = id;
-		
+			aplikasiDomain.currentIdOperator = id;
 			var aplikasi = storage.getById( aplikasiDomain, id );
 			var list = aplikasi.daftarOperator;
 			var pageNumber = 0;
@@ -174,29 +172,41 @@ var aplikasiDomain = {
 				var tmp = list[ index ];
 
 				html += '<tr>' +
+					'<td>' + tmp.nip + '</td>' +
 					'<td>' + tmp.nama + '</td>' +
-					'<td>' + tmp.tanggalLahir + '</td>' +
-					'<td>' + tmp.keterangan + '</td>' +
+					'<td>' + tmp.role + '</td>' +
 					'</tr>';
 				
 			}
 			
-			page.change( $( '#table-pengikut' ), html );
+			page.change( $( '#table-operator' ), html );
 
 		},
 		
-		tambahPengikut: function( id ) {
+		tambahAdmin: function( id ) {
 			
-			var id = sppdDomain.currentId;
-			
+			aplikasiDomain.currentId = id;
+			$( '#form-pengikut-nip' ).val( '' );
 			$( '#form-pengikut-nama' ).val( '' );
-			$( '#form-pengikut-tanggal-lahir' ).val( '' );
-			$( '#form-pengikut-keterangan' ).val( '' );
+			aplikasiDomain.roleOperator = 'ADMIN';
+			
+		},
+		
+		tambahOperator: function( id ) {
+			
+			aplikasiDomain.currentId = id;
+			$( '#form-pengikut-nip' ).val( '' );
+			$( '#form-pengikut-nama' ).val( '' );
+			aplikasiDomain.roleOperator = 'OPERATOR';
 			
 		},
 		
 		hapus: function( id ) {
-			sppdRestAdapter.delete( id, sppdDomain.success );
+			aplikasiRestAdapter.delete( id, aplikasiDomain.success );
+		},
+		
+		hapusOperator: function( id ) {
+			aplikasiRestAdapter.deleteOperator( id, aplikasiDomain.success );
 		}
 	}
 };
