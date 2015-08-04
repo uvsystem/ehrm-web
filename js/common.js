@@ -241,6 +241,7 @@ function rest( link, projectName) {
 		        url: targetUrl + '/token/' + _username,
 				contentType: 'application/json',
 		        processData: false,
+				data: JSON.stringify( { password: _password } ),
 			        
 				beforeSend: function (jqXHR, settings)
 				{
