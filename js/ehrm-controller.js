@@ -21,33 +21,15 @@ $( document ).ready( function () {
 		kodeAplikasi = result.object;
 	});
 
-	if ( operator.isLogin() == false ) {
-		
+	if ( !operator.isAuthorized() ) {
 		window.location.href = 'login.html';
 		return;
-		
 	}
-	
-	if ( operator.getTokenString != '********' && operator.getPegawai() ) {
-		
-		if ( ( operator.getRole() != 'ADMIN' && operator.getRole() != 'OPERATOR' ) ) {
-			
-			message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
-			message.writeLog( 'Maaf, anda tidak bisa mengakses halaman ini' ); // LOG
-			
-			window.location.href = 'login.html';
-			return;
-			
-		}
-		
-	}
-	
 	storage.reset();
 
 	page.change( $( '#operator-nama' ), operator.getName() );
 	page.setName( 'HOME' );
 	
-	message.writeLog( "Username: " + operator.getUsername() );
 	var navDef = navigation( operator.getUsername() == 'superuser' ? 'ADMIN' : operator.getRole() );
 	page.change( $( '#nav-menu' ), navDef );
 

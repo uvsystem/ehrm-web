@@ -149,7 +149,7 @@ function rest( link, projectName) {
 		call: function( path, data, method, success, error, async ) {
 	
 			// Jika tidak login, redirect ke halaman login.
-			if ( operator.isLogin() == false ) {
+			if ( operator.isAuthenticated() == false ) {
 					
 				window.location.href = 'login.html';
 				return;
@@ -1328,7 +1328,7 @@ var operator = {
 	 * Mengecek apakah token ada dan masih berlaku.
 	 * Jika token ada dan masih berlaku, maka pegawai bisa melakukan proses berikutnya, selain dari pada itu, pegawai harus login kembali.
 	 */
-	isLogin: function() {
+	isAuthenticated: function() {
 
 		try {
 			
@@ -1348,5 +1348,33 @@ var operator = {
 			return false;
 			
 		}
+	},
+	
+	isAuthorized: function() {
+
+		if ( this.isAuthenticated() == false )
+			return false;
+		
+		// Reload token
+		restAdapter.callFree( '/token/' + this.getTokenString(), null, 'GET', function( result ) {
+			if ( result.tipe == 'ENTITY')
+				operator.setToken( result.object );
+		}, 
+		message.writeError, 
+		false
+		);
+
+		var role = this.getRole();
+		if ( ( role != 'ADMIN' && role != 'OPERATOR' ) ) {
+
+			message.write( 'Maaf, anda tidak bisa mengakses halaman ini' );
+			message.writeLog( 'Maaf, anda tidak bisa mengakses halaman ini' ); // LOG
+
+			return false;
+
+		}
+		
+		return true;
+		
 	}
 };
