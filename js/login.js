@@ -1,4 +1,4 @@
-var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
+var restAdapter = rest( 'https://core-unitedvision.whelastic.net', 'ehrm' );
 
 $( document ).ready( function () {
 	

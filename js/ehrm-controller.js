@@ -15,7 +15,6 @@
 var kodeAplikasi;
  
 $( document ).ready( function () {
-$( document ).ready( function () {
 
 	aplikasiRestAdapter.findKode( function( result ) {
 		kodeAplikasi = result.object;

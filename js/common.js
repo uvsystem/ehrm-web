@@ -1449,7 +1449,7 @@ var operator = {
 			return false;
 		
 		// Reload token
-		restAdapter.callFree( '/token/' + this.getTokenString(), null, 'GET', function( result ) {
+		ehrmRestAdapter.callFree( '/token/' + this.getTokenString(), null, 'GET', function( result ) {
 			if ( result.tipe == 'ENTITY')
 				operator.setToken( result.object );
 		}, 
