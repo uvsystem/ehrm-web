@@ -12,9 +12,9 @@
  * Version: 1.0.0
  */
 
-var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
 var kodeAplikasi;
  
+$( document ).ready( function () {
 $( document ).ready( function () {
 
 	aplikasiRestAdapter.findKode( function( result ) {

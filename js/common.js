@@ -13,6 +13,7 @@
  */
  
 var waitModal;
+var kodeAplikasi;
 
 /**
  * Pesan yang akan ditampilkan ketika terjadi suatu proses.
@@ -1397,6 +1398,8 @@ var operator = {
 			
 		} catch ( e ) {
 			
+			message.writeLog( e );
+			
 			throw e;
 			
 		}
@@ -1430,7 +1433,6 @@ var operator = {
 			// Jika token sudah expire, maka user dianggap belum login
 			if ( now.isAfter( expire ) )
 				return false;
-
 			return true;
 				
 		} catch ( e ) {
