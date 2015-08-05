@@ -209,6 +209,64 @@ function rest( link, projectName) {
 		    } );
 		},
 	
+		callFree: function( path, data, method, success, error, async ) {
+	
+			// Jika tidak login, redirect ke halaman login.
+			if ( operator.isAuthenticated() == false ) {
+					
+				window.location.href = 'login.html';
+				return;
+					
+			}
+			
+			if ( async == null )
+				async = true;
+			
+			var targetUrl = this.url + path;
+	
+			var promise = $.ajax(
+				{
+			        type: method,
+			        url: targetUrl,
+					async: async,
+					contentType: 'application/json',
+			        processData: false,
+			        data: JSON.stringify( data ),
+							
+			        beforeSend: function ( jqXHR, settings )
+					{
+						
+						if ( waitModal )
+							waitModal.show();
+
+					}
+				}
+			);
+	
+		    promise.done( function( result )
+			{
+	
+				// result = JSON.parse( result ); // Otomatis parse object menjadi JSON. Dan eksekusi function
+					
+				if ( result.tipe == "ERROR" )
+					message.logResult( result ); // LOG
+	
+				success( result ); // Eksekusi callback
+					
+			} );
+	
+	
+			promise.fail( error ); // Panggil error ketika terjadi kesalahan
+				  
+			promise.always( function ( jqXHR, textStatus )
+			{
+	
+				if ( waitModal )
+					waitModal.hide();
+				
+		    } );
+		},
+	
 		callAjax: function( object ) {
 	
 			var path = object.path; 
@@ -248,7 +306,6 @@ function rest( link, projectName) {
 
 					if ( waitModal )
 						waitModal.show();
-					jqXHR.setRequestHeader ("Authorization", "Basic " + btoa( _username + ':' + _password ) );
 					
 		        }
 					
@@ -284,10 +341,6 @@ function rest( link, projectName) {
 		},
 	
 		logout: function() {
-	
-			// Token menjadi pengganti password user.
-			var _password = operator.getTokenString();
-			var _username = operator.getUsername();
 			
 			var targetUrl = this.url;
 			var promise = $.ajax(
@@ -300,7 +353,6 @@ function rest( link, projectName) {
 						
 						if ( waitModal )
 							waitModal.show();
-						jqXHR.setRequestHeader ("Authorization", "Basic " + btoa( _username + ':' + _password ) );
 						
 					}
 				}
@@ -848,6 +900,118 @@ var number = {
 	}
 };
 
+var myList = {
+
+	getByNama: function ( list, nama ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+			
+				if ( nama == obj.nama )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for nama: " + nama );
+		
+		return null;
+		
+	},
+
+	getById: function ( list, id ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+				
+				if ( id == obj.id )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for id: " + id );
+		
+		return null;
+	},
+
+	getByKode: function ( list, kode ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+
+				if ( kode == obj.kode )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for kode: " + kode );
+		
+		return null;
+	},
+
+	getByNomor: function ( list, nomor ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+
+				if ( nomor == obj.nomor )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for nomor: " + nomor );
+		
+		return null;
+	},
+
+	getByNip: function ( list, nip ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+
+				if ( nip == obj.nip )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for nip: " + nip );
+		
+		return null;
+	},
+
+	getByUsername: function ( list, username ) {
+		
+		if ( list ) {
+
+			for ( var index = 0; index < list.length; index++ ) {
+
+				var obj = list[ index ];
+
+				if ( username == obj.username )
+					return obj;
+			}
+		}
+		
+		message.writeLog( "Returning null for username: " + username );
+		
+		return null;
+	}
+};
+
 var storage = {
 
 	set: function ( list, storageName ) {
@@ -882,121 +1046,48 @@ var storage = {
 		
 		var list = this.get( container.nama );
 		
-		if ( list ) {
-
-			for ( var index = 0; index < list.length; index++ ) {
-
-				var obj = list[ index ];
-			
-				if ( nama == obj.nama )
-					return obj;
-			}
-		}
-		
-		message.writeLog( "api.js: getByNama(): Returning null for nama " + nama + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
+		return myList.getByNama( list, nama );
 		
 	},
 
 	getById: function ( container, id ) {
 
 		var list = this.get( container.nama );
-		
-		if ( list ) {
 
-			for ( var index = 0; index < list.length; index++ ) {
+		return myList.getById( list, id );
 
-				var obj = list[ index ];
-				
-				if ( id == obj.id )
-					return obj;
-			}
-		}
-		
-		message.writeLog( "api.js: getById(): Returning null for id " + id + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
 	},
 
 	getByKode: function ( container, kode ) {
 		
 		var list = this.get( container.nama );
 		
-		if ( list ) {
-
-			for ( var index = 0; index < list.length; index++ ) {
-
-				var obj = list[ index ];
-
-				if ( kode == obj.kode )
-					return obj;
-			}
-		}
+		return myList.getByKode( list, kode );
 		
-		message.writeLog( "api.js: getByKode(): Returning null for kode " + kode + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
 	},
 
 	getByNomor: function ( container, nomor ) {
 		
 		var list = this.get( container.nama );
 		
-		if ( list ) {
-
-			for ( var index = 0; index < list.length; index++ ) {
-
-				var obj = list[ index ];
-
-				if ( nomor == obj.nomor )
-					return obj;
-			}
-		}
+		return myList.getByNomor( list, nomor );
 		
-		message.writeLog( "api.js: getByKode(): Returning null for kode " + kode + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
 	},
 
 	getByNip: function ( container, nip ) {
 		
 		var list = this.get( container.nama );
 		
-		if ( list ) {
-
-			for ( var index = 0; index < list.length; index++ ) {
-
-				var obj = list[ index ];
-
-				if ( nip == obj.nip )
-					return obj;
-			}
-		}
+		return myList.getByNip( list, nip );
 		
-		message.writeLog( "api.js: getByKode(): Returning null for nip " + nip + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
 	},
 
 	getByUsername: function ( container, username ) {
 		
 		var list = this.get( container.nama );
 		
-		if ( list ) {
-
-			for ( var index = 0; index < list.length; index++ ) {
-
-				var obj = list[ index ];
-
-				if ( username == obj.username )
-					return obj;
-			}
-		}
+		return myList.getByUsername( list, username );
 		
-		message.writeLog( "api.js: getByKode(): Returning null for username " + username + " from " + container.nama + " storage." ); // LOG
-		
-		return null;
 	},
 
 	reset: function () {
