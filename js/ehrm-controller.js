@@ -331,14 +331,13 @@ $( document ).ready( function () {
 		var nip = $( '#form-pegawai-nip' ).val();
 		var nik = $( '#form-pegawai-nik' ).val();
 		var nama = $( '#form-pegawai-nama' ).val();
-		var tanggal = myDate.fromDatePicker( $( '#form-pegawai-tanggal-lahir' ).val() );
-		var tanggalLahir = myDate.toFormattedString( tanggal );
+		var tanggalLahir = myDate.fromDatePicker( $( '#form-pegawai-tanggal-lahir' ).val() );
 		var password = $( '#form-pegawai-password' ).val();
 		
 		if ( !password )
 			password = 'password';
 
-		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir, '', '', idPenduduk, pegawaiDomain.success );
+		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir.getFormattedString(), '', '', idPenduduk, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-mutasi', function() {
@@ -360,12 +359,13 @@ $( document ).ready( function () {
 		var pangkat = $( '#form-promosi-pangkat-pangkat' ).val();
 		var nomorSk = $( '#form-promosi-pangkat-nomor-sk' ).val();
 		var tanggalMulai = myDate.fromDatePicker( $( '#form-promosi-pangkat-tanggal-mulai' ).val() );
-		tanggalMulai = tanggalMulai.getFormattedString();
 		var tanggalSelesai = $( '#form-promosi-pangkat-tanggal-selesai' ).val();
-		if ( tanggalSelesai )
-			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
+		if ( tanggalSelesai ) {
+			var tanggal = myDate.fromDatePicker( tanggalSelesai );
+			tanggalSelesai = tanggal.getFormattedString();
+		}
 
-		pegawaiRestAdapter.promosiPangkat( nip, pangkat, nomorSk, tanggalMulai, tanggalSelesai, pegawaiDomain.success );
+		pegawaiRestAdapter.promosiPangkat( nip, pangkat, nomorSk, tanggalMulai.getFormattedString(), tanggalSelesai, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-promosi-jabatan', function() {
@@ -375,12 +375,13 @@ $( document ).ready( function () {
 		var jabatan = storage.getByNama( jabatanDomain, $( '#form-promosi-jabatan-jabatan' ).val() );
 		var nomorSk = $( '#form-promosi-jabatan-nomor-sk' ).val();
 		var tanggalMulai = myDate.fromDatePicker( $( '#form-promosi-jabatan-tanggal-mulai' ).val() );
-		tanggalMulai = tanggalMulai.getFormattedString();
 		var tanggalSelesai = $( '#form-promosi-jabatan-tanggal-selesai' ).val();
-		if ( tanggalSelesai )
-			tanggalSelesai = myDate.fromDatePicker( tanggalSelesai ).getFormattedString();
+		if ( tanggalSelesai ) {
+			var tanggal = myDate.fromDatePicker( tanggalSelesai );
+			tanggalSelesai = tanggal.getFormattedString();
+		}
 
-		pegawaiRestAdapter.promosiJabatan( nip, jabatan.id, nomorSk, tanggalMulai, tanggalSelesai, pegawaiDomain.success );
+		pegawaiRestAdapter.promosiJabatan( nip, jabatan.id, nomorSk, tanggalMulai.getFormattedString(), tanggalSelesai, pegawaiDomain.success );
 	} );
 
 	$( document ).on( 'change', '#text-pegawai-satuan-kerja', function() {
@@ -730,37 +731,11 @@ $( document ).ready( function () {
 	});
 	
 	$( document ).on( 'click', '#btn-cetak-rekap-bagian', function() {
-
-		var namaBagian = $( '#form-bagian-bagian' ).val();
-		var tanggalAwal = $( '#form-bagian-tanggal-awal' ).val();
-		var tanggalAkhir = $( '#form-bagian-tanggal-akhir' ).val();
-
-		var formattedAwal = myDate.fromDatePicker( tanggalAwal );
-		var formattedAkhir = myDate.fromDatePicker( tanggalAkhir );
-
-		var _bagian = storage.getByNama( bagian, namaBagian );
-		var firstDate = myDate.toFormattedString( formattedAwal );
-		var lastDate = myDate.toFormattedString( formattedAkhir );
-		
-		printer.submitPost( '/pegawai/print/rekap/bagian/' + _bagian.id + '/' + firstDate + '/' + lastDate, [], 'GET' );	
-		
+		throw new Error( 'Not yet implemented' );
 	});
 	
 	$( document ).on( 'click', '#btn-cetak-rekap-skpd', function() {
-
-		var namaSkpd = $( '#form-skpd-skpd' ).val();
-		var tanggalAwal = $( '#form-skpd-tanggal-awal' ).val();
-		var tanggalAkhir = $( '#form-skpd-tanggal-akhir' ).val();
-
-		var formattedAwal = myDate.fromDatePicker( tanggalAwal );
-		var formattedAkhir = myDate.fromDatePicker( tanggalAkhir );
-		
-		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
-		var firstDate = myDate.toFormattedString( formattedAwal );
-		var lastDate = myDate.toFormattedString( formattedAkhir );
-		
-		printer.submitPost( '/pegawai/print/rekap/skpd/' + _skpd.id + '/' + firstDate + '/' + lastDate, [], 'GET' );	
-		
+		throw new Error( 'Not yet implemented' );
 	});
 	
 	// Alert auto-close
