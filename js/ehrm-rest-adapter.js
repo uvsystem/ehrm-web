@@ -57,9 +57,9 @@ var unitKerjaRestAdapter = {
 		);
 	},
 	
-	findSubUnit: function( id, callback ) {
+	findSubUnit: function( kode, callback ) {
 
-		ehrmRestAdapter.call( '/satker/' + id + '/sub', null, 'GET',
+		ehrmRestAdapter.call( '/satker/' + kode + '/sub', null, 'GET',
 			function( result ) {
 				message.writeLog( "Mengambil unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
