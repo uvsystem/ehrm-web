@@ -483,6 +483,17 @@ var absenRestAdapter = {
 		);
 	},
 	
+	rekapBySatker: function( kode, awal, akhir ) {
+
+		ehrmRestAdapter.call( '/absen/' + kode + '/rekap/' + awal + '/' + akhir, null, 'GET',
+			function( result ) {
+				callback( result );
+				message.writeLog( "Rekap absen: " + keyword ); // LOG
+			},
+			message.error
+		);
+	},
+	
 	search: function( keyword, callback ) {
 
 		ehrmRestAdapter.call( '/absen/search/' + keyword, null, 'GET',
