@@ -59,7 +59,7 @@ var unitKerjaRestAdapter = {
 	
 	findSubUnit: function( kode, callback ) {
 
-		ehrmRestAdapter.call( '/satker/' + kode + '/sub', null, 'GET',
+		ehrmRestAdapter.callFree( '/satker/' + kode + '/sub', null, 'GET',
 			function( result ) {
 				message.writeLog( "Mengambil unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
@@ -99,7 +99,7 @@ var unitKerjaRestAdapter = {
 	
 	all: function( callback ) {
 
-		ehrmRestAdapter.call( '/satker', null, 'GET',
+		ehrmRestAdapter.callFree( '/satker', null, 'GET',
 			function( result ) {
 				message.writeLog( "Mengambil semua unit kerja: " + ( result.list ? result.list.length : 0 ) ); // LOG
 				callback( result );
@@ -483,7 +483,7 @@ var absenRestAdapter = {
 		);
 	},
 	
-	rekapBySatker: function( kode, awal, akhir ) {
+	rekapBySatker: function( kode, awal, akhir, callback ) {
 
 		ehrmRestAdapter.callFree( '/absen/' + kode + '/rekap/' + awal + '/' + akhir, null, 'GET',
 			function( result ) {
