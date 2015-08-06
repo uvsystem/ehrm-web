@@ -485,7 +485,7 @@ var absenRestAdapter = {
 	
 	rekapBySatker: function( kode, awal, akhir ) {
 
-		ehrmRestAdapter.call( '/absen/' + kode + '/rekap/' + awal + '/' + akhir, null, 'GET',
+		ehrmRestAdapter.callFree( '/absen/' + kode + '/rekap/' + awal + '/' + akhir, null, 'GET',
 			function( result ) {
 				callback( result );
 				message.writeLog( "Rekap absen: " + keyword ); // LOG
