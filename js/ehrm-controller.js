@@ -695,47 +695,13 @@ $( document ).ready( function () {
 	} );
 	
 	// Rekap Handler
-	$( document ).on( 'click', '#btn-rekap-bagian', function() {
+	$( document ).on( 'click', '#btn-cetak-rekap-absen', function() {
 
-		var listSkpd = storage.get( unitKerjaDomain.nama );
-		var listBagian = storage.get( bagian.nama );
+		var awal = myDate.fromDatePicker( $( '#form-rekap-absen-tanggal-awal' ).val() );
+		var akhir = myDate.fromDatePicker( $( '#form-rekap-absen-tanggal-akhir' ).val() );
 		
-		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generate( listSkpd ) );
-		page.change( $( '#list-bagian' ), page.list.option.generate( listBagian ) );
-
-		$( '#form-bagian-unitKerjaDomain' ).val( '' );
-		$( '#form-bagian-bagian' ).val( '' );
-	});
-	
-	$( document ).on( 'click', '#btn-rekap-unitKerjaDomain', function() {
-
-		var listSkpd = storage.get( unitKerjaDomain.nama );
-		page.change( $( '#list-unitKerjaDomain' ), page.list.option.generate( listSkpd ) );
+		printer.submitPost( target + '/ehrm/absen/rekap/' + awal.getFormattedString() + '/' + akhir.getFormattedString(), [], 'GET' );
 		
-		$( '#form-unitKerjaDomain-unitKerjaDomain' ).val( '' );
-	});
-	
-	$( document ).on( 'change', '#form-bagian-unitKerjaDomain', function() {
-
-		var namaSkpd = $( '#form-bagian-unitKerjaDomain' ).val();
-		var _skpd = storage.getByNama( unitKerjaDomain, namaSkpd );
-		
-		var onSuccess = function( result ) {
-			
-			if ( result.tipe == 'LIST' )
-				page.change( $( '#list-bagian' ), page.list.option.generate( result.list ) );
-		};
-		
-		rest.call( '/bagian/unitKerjaDomain/' + _skpd.id, { }, 'GET', onSuccess, message.error );		
-		
-	});
-	
-	$( document ).on( 'click', '#btn-cetak-rekap-bagian', function() {
-		throw new Error( 'Not yet implemented' );
-	});
-	
-	$( document ).on( 'click', '#btn-cetak-rekap-skpd', function() {
-		throw new Error( 'Not yet implemented' );
 	});
 	
 	// Alert auto-close
