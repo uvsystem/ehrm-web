@@ -107,7 +107,7 @@ $( document ).ready( function () {
 	$( document ).on( 'click', '#nav-logout', function() {
 		
 		page.change( $( '#message' ), '');
-		restAdapter.logout();
+		ehrmRestAdapter.logout();
 
 	} );
 	
