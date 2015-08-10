@@ -33,9 +33,7 @@ $( document ).ready( function () {
 	page.change( $( '#nav-menu' ), navDef );
 
 	$( function () {
-	
 		$( '[ data-toggle = "tooltip" ]' ).tooltip();
-	  
 	} );
 
 	
