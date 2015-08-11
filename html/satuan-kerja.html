@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-8"><!-- table -->
+	<div class="col-md-12"><!-- table -->
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="table-responsive">
@@ -15,24 +15,28 @@
 						<tbody id="table">
 						</tbody>
 					</table>
-					<div>
-						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward"></a>
-						<a id="pageNumber">1</a>
-						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward"></a>
-					</div>
 				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
+						<a id="pageNumber">1</a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-skpd-tambah" data-toggle="modal" data-target="#modal-form-skpd">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
+						<input type="text" id="satker-satuan-kerja" list="list-satuan-kerja" class="form-control" placeholder="Pilih Satuan Kerja" aria-describedby="basic-addon1" />
+						<datalist id="list-satuan-kerja"></datalist>
+					</div>
+				</div><!-- row -->
 			</div>
 		</div>
 	</div><!-- table -->
-	<div class="col-md-4"><!-- control -->
-		<div class="row"><!-- tombol tambah -->
-			<a href="#">
-				<div class="alert alert-info" role="alert" id="btn-skpd-tambah" data-toggle="modal" data-target="#modal-form-skpd" href="#">
-					<span class="glyphicon glyphicon-briefcase big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Unit Kerja</b>
-				</div>
-			</a>
-		</div><!-- tombol tambah -->
-	</div><!-- control -->
 </div>
 
 <div class="modal fade" id="modal-form-skpd" role="dialog">

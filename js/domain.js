@@ -248,6 +248,8 @@ var unitKerjaDomain = {
 
 		unitKerjaDomain.content.setData( list );
 		
+		page.change( $( '#list-satuan-kerja' ), page.list.dataList.generateFromStorage( unitKerjaDomain.nama, 'list-satuan-kerja') );
+		
 	},
 
 	content: {

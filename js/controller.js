@@ -193,6 +193,18 @@ $( document ).ready( function () {
 		throw new Error( 'Not Yet Implemented' );
 	} );
 
+	$( document ).on( 'change', '#satker-satuan-kerja', function() {
+		
+		page.change( $( '#message' ), '');
+		var satker = storage.getByNama( unitKerjaDomain, $( '#satker-satuan-kerja' ).val() );
+		
+		unitKerjaRestAdapter.findSubUnit( satker.singkatan, function( result ) {
+			unitKerjaDomain.load( result.list );
+		});
+		
+		$( '#text-pegawai-satuan-kerja' ).val( satker.nama );
+	} );
+
 
 	// Absen handler.
 	$( document ).on( 'click', '#btn-absen-tambah', function() {
@@ -698,7 +710,15 @@ $( document ).ready( function () {
 		var awal = myDate.fromDatePicker( $( '#form-rekap-absen-tanggal-awal' ).val() );
 		var akhir = myDate.fromDatePicker( $( '#form-rekap-absen-tanggal-akhir' ).val() );
 		
-		printer.submitPost( target + '/ehrm/absen/rekap/' + awal.getFormattedString() + '/' + akhir.getFormattedString(), [], 'GET' );
+		printer.submitPost( target + '/ehrm/absen/rekap/' + awal.getFormattedString() + '/' + akhir.getFormattedString() + '/cetak', [], 'GET' );
+		
+	});
+
+	$( document ).on( 'click', '#btn-rekap-sppd-cetak', function() {
+
+		var tahun = $( '#form-rekap-sppd-tahun' ).val();
+		
+		printer.submitPost( target + '/ehrm/sppd/rekap/tahun/' + tahun + '/cetak', [], 'GET' );
 		
 	});
 	

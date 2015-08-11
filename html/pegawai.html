@@ -1,14 +1,4 @@
 <div class="row">
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" role="alert" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai" href="#">
-				<span class="glyphicon glyphicon-user big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Pegawai</b>
-			</div>
-		</a>
-	</div>
-</div>
-
-<div class="row">
 	<div class="col-md-12 col-sm-12"><!-- Table div -->
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -25,12 +15,21 @@
 						<tbody id="table">
 						</tbody>
 					</table>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
 					<div class="col-md-2">
-						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward"></a>
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
 						<a id="pageNumber">1</a>
-						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward"></a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
 						<input type="text" id="text-pegawai-satuan-kerja" class="form-control" list="list-satker" placeholder="Pilih Satuan Kerja" />
 						<datalist id="list-satker" />
 					</div>
