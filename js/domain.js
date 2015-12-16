@@ -530,6 +530,9 @@ var pegawaiDomain = {
 			$( '#form-pegawai-nik' ).val( obj.nik );
 			$( '#form-pegawai-nama' ).val( obj.nama );
 			$( '#form-pegawai-password' ).val( 'password' );
+			$( '#form-pegawai-pangkat' ).val( obj.pangkat );
+			$( '#form-pegawai-eselon' ).val( obj.eselon );
+			$( '#form-pegawai-jabatan' ).val( obj.namaJabatan );
 
 			var tanggalLahir = myDate.fromFormattedString( obj.tanggalLahirStr );
 			$( '#form-pegawai-tanggal-lahir' ).val( tanggalLahir.getDatePickerString() );

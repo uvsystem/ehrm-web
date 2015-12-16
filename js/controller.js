@@ -342,12 +342,32 @@ $( document ).ready( function () {
 		var nik = $( '#form-pegawai-nik' ).val();
 		var nama = $( '#form-pegawai-nama' ).val();
 		var tanggalLahir = myDate.fromDatePicker( $( '#form-pegawai-tanggal-lahir' ).val() );
+		var pangkat = $( '#form-pegawai-pangkat' ).val();
+		var eselon = $( '#form-pegawai-eselon' ).val();
+		var namaJabatan = $( '#form-pegawai-jabatan' ).val();
 		var password = $( '#form-pegawai-password' ).val();
 		
 		if ( !password )
 			password = 'password';
 
-		pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir.getFormattedString(), '', '', idPenduduk, pegawaiDomain.success );
+		var pegawai = {
+			id: id,
+			nip: nip,
+			passwordStr: password,
+			nik: nik,
+			nama: nama,
+			tanggalLahirStr: tanggalLahir.getFormattedString(),
+			email: '',
+			telepon: '',
+			pangkat: pangkat,
+			namaJabatan: namaJabatan,
+			eselon: eselon,
+			idPenduduk: idPenduduk
+		};
+
+		pegawaiRestAdapter.saveDirect( idSatuanKerja, pegawai, pegawaiDomain.success );
+
+		// pegawaiRestAdapter.save( idSatuanKerja, id, nip, password, nik, nama, tanggalLahir.getFormattedString(), '', '', idPenduduk, pegawaiDomain.success );
 	} );
 	
 	$( document ).on( 'click', '#btn-simpan-mutasi', function() {
