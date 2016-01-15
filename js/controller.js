@@ -763,7 +763,7 @@ function navigation( role ) {
 		return '' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="Unit Kerja"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Unit Kerja</b></a></li>' +
-			'<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
+			// '<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
 			'<li><a id="menu-pegawai" href="#" data-toggle="tooltip" data-placement="right" title="Pegawai"><span class="glyphicon glyphicon-user big-icon"></span><b class="icon-text">Pegawai</b></a></li>' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +
@@ -780,7 +780,7 @@ function navigation( role ) {
 		return '' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-skpd" href="#" data-toggle="tooltip" data-placement="right" title="Unit Kerja"><span class="glyphicon glyphicon-home big-icon"></span><b class="icon-text">Unit Kerja</b></a></li>' +
-			'<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
+			// '<li><a id="menu-jabatan" href="#" data-toggle="tooltip" data-placement="right" title="Jabatan"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Jabatan</b></a></li>' +
 			'<li><a id="menu-pegawai" href="#" data-toggle="tooltip" data-placement="right" title="Pegawai"><span class="glyphicon glyphicon-user big-icon"></span><b class="icon-text">Pegawai</b></a></li>' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +

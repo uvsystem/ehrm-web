@@ -274,9 +274,18 @@ var unitKerjaDomain = {
 					'<td>' + tmp.nama + '</td>' +
 					'<td>' + tmp.tipe + '</td>' +
 					'<td>' +
-					'<div class="btn-group btn-group-xs">' +
-					'<button type="button" class="btn btn-danger" onclick="unitKerjaDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</button>' +
+					'<div class="btn-group">' +
+					  '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+						'Pilihan <span class="caret"></span>' +
+					  '</button>' +
+					  '<ul class="dropdown-menu">' +
+						'<li><a href="#" onclick="unitKerjaDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</a></li>' +
+						'<li><a href="#" onclick="unitKerjaDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
+					  '</ul>' +
 					'</div>' +
+					// '<div class="btn-group btn-group-xs">' +
+					// '<button type="button" class="btn btn-danger" onclick="unitKerjaDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-skpd">Detail</button>' +
+					// '</div>' +
 					'</td>' +
 					'</tr>';
 					
@@ -301,9 +310,16 @@ var unitKerjaDomain = {
 			
 		},
 		
+		hapus: function ( id ) {
+			unitKerjaRestAdapter.delete( id, function ( result ) {
+				message.success( result );
+				unitKerjaDomain.reload();
+			} );
+		},
+		
 		resetForm: function( obj ) {
 		
-		},		
+		}
 	}
 
 };
@@ -506,10 +522,10 @@ var pegawaiDomain = {
 					  '</button>' +
 					  '<ul class="dropdown-menu">' +
 						'<li><a href="#" onclick="pegawaiDomain.content.setDetail(' + tmp.nip + ')" data-toggle="modal" data-target="#modal-form-pegawai">Detail</a></li>' +
-						'<li role="separator" class="divider"></li>' +
 						'<li><a href="#" onclick="pegawaiDomain.content.openMutasi(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-mutasi">Mutasi</a></li>' +
-						'<li><a href="#" onclick="pegawaiDomain.content.openPromosiPangkat(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-promosi-pangkat">Promosi Pangkat</a></li>' +
-						'<li><a href="#" onclick="pegawaiDomain.content.openPromosiJabatan(' + tmp.id + ', ' + tmp.unitKerja.id + ')" data-toggle="modal" data-target="#modal-form-promosi-jabatan">Promosi Jabatan</a></li>' +
+						'<li><a href="#" onclick="pegawaiDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
+						// '<li><a href="#" onclick="pegawaiDomain.content.openPromosiPangkat(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-promosi-pangkat">Promosi Pangkat</a></li>' +
+						// '<li><a href="#" onclick="pegawaiDomain.content.openPromosiJabatan(' + tmp.id + ', ' + tmp.unitKerja.id + ')" data-toggle="modal" data-target="#modal-form-promosi-jabatan">Promosi Jabatan</a></li>' +
 					  '</ul>' +
 					'</div>' +
 					'</td>' +
@@ -529,7 +545,7 @@ var pegawaiDomain = {
 			$( '#form-pegawai-nip' ).val( obj.nip );
 			$( '#form-pegawai-nik' ).val( obj.nik );
 			$( '#form-pegawai-nama' ).val( obj.nama );
-			$( '#form-pegawai-password' ).val( 'password' );
+			$( '#form-pegawai-password' ).val( obj.passwordStr );
 			$( '#form-pegawai-pangkat' ).val( obj.pangkat );
 			$( '#form-pegawai-eselon' ).val( obj.eselon );
 			$( '#form-pegawai-jabatan' ).val( obj.namaJabatan );
@@ -550,10 +566,12 @@ var pegawaiDomain = {
 			pegawaiDomain.currentId = idPegawai;
 		},
 		
+		// belum digunakan
 		openPromosiPangkat: function( idPegawai ) {
 			pegawaiDomain.currentId = idPegawai;
 		},
 		
+		// belum digunakan
 		openPromosiJabatan: function( idPegawai, idSatker ) {
 			pegawaiDomain.currentId = idPegawai;
 
@@ -563,6 +581,10 @@ var pegawaiDomain = {
 					storage.set( result.list, jabatanDomain.nama );
 				}
 			});
+		},
+		
+		hapus: function( id ) {
+			pegawaiRestAdapter.delete( id, pegawaiDomain.success );
 		}
 	},
 };
