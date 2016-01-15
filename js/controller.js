@@ -468,12 +468,21 @@ $( document ).ready( function () {
 	
 	// Kalendar Handler
 	$( document ).on( 'click', '#btn-simpan-kalendar', function() {
-		
+
 		var tanggal = myDate.fromDatePicker( $( '#form-kalendar-tanggal' ).val() );
-		kalendarRestAdapter.add( tanggal.getFormattedString(), function( result ) {
-			message.success( result );
-			kalendarDomain.reload();
-		});
+		var tanggalAkhir = myDate.fromDatePicker( $( '#form-kalendar-tanggal-akhir' ).val() );
+		
+		var dAwal = new Date(tanggal.year, ( tanggal.month - 1 ), tanggal.day);
+		var dAkhir = new Date(tanggalAkhir.year, ( tanggalAkhir.month - 1 ), tanggalAkhir.day);
+
+		for ( var d = dAwal; d <= dAkhir; d.setDate( d.getDate() + 1 ) ) {
+			var dObject = myDate.fromDate( d );
+
+			kalendarRestAdapter.add( dObject.getFormattedString(), function( result ) {
+				message.success( result );
+				// kalendarDomain.reload();
+			});
+		}
 	} );
 	
 	$( document ).on( 'change', '#text-tanggal-awal', function() {

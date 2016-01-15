@@ -232,9 +232,9 @@ var pegawaiRestAdapter = {
 		);
 	},
 	
-	"delete": function( nip, callback ) {
+	"delete": function( id, callback ) {
 
-		ehrmRestAdapter.call( '/pegawai/' + nip, null, 'DELETE',
+		ehrmRestAdapter.call( '/pegawai/' + id, null, 'DELETE',
 			function( result ) {
 				callback( result );
 				message.writeLog( "Menghapus pegawai: " + id ); // LOG
