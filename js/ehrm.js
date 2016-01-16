@@ -368,6 +368,16 @@ var pegawaiRestAdapter = {
 			},
 			message.error
 		);
+	},
+	
+	updatePassword: function( id, password, callback ) {
+		ehrmRestAdapter.call( '/pegawai/' + id + '/password', {password: password}, 'PUT',
+			function( result ) {
+				message.writeLog( "Ubah password '" + id + "' menjadi :" + password ); // LOG
+				callback( result );
+			},
+			message.error
+		);
 	}
 };
 
