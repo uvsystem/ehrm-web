@@ -1074,7 +1074,7 @@ var sppdDomain = {
 					  '</button>' +
 					  '<ul class="dropdown-menu">' +
 						'<li><a href="#" onclick="sppdDomain.content.setDetail(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-sppd">Detail</a></li>' +
-						'<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pengikut</a></li>' +
+						// '<li><a href="#" onclick="sppdDomain.content.tambahPengikut(' + tmp.id + ')" data-toggle="modal" data-target="#modal-form-pengikut">Tambah Pengikut</a></li>' +
 						'<li><a href="#" onclick="sppdDomain.content.hapus(' + tmp.id + ')">Hapus</a></li>' +
 					  '</ul>' +
 					'</div>' +
