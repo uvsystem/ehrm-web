@@ -1,0 +1,151 @@
+<div class="row">
+	<div class="col-md-12"><!-- table -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b>DAFTAR SPPD</b>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped text-center">
+						<thead>
+							<tr>
+								<th class="center">Nomor</th>
+								<th class="center">NIP</th>
+								<th class="center">Tanggal Berangkat</th>
+								<th class="center">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody id="table">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
+						<a id="pageNumber">1</a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-sppd-tambah" data-toggle="modal" data-target="#modal-form-sppd">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
+						<input type="text" id="sppd-satuan-kerja" list="list-satuan-kerja" class="form-control" placeholder="Pilih Satuan Kerja" aria-describedby="basic-addon1" />
+						<datalist id="list-satuan-kerja"></datalist>
+					</div>
+				</div><!-- row -->
+			</div><!-- footer -->
+		</div>
+	</div><!-- table -->
+	<!--
+	<div class="col-md-5"><!-- right table
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<b>DAFTAR PENGIKUT</b>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped text-center">
+						<thead>
+							<tr>
+								<th class="center">Nama</th>
+								<th class="center">Tanggal Lahir</th>
+								<th class="center">Keterangan</th>
+							</tr>
+						</thead>
+						<tbody id="table-pengikut">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div><!-- right table -->
+</div>
+
+<div class="modal fade" id="modal-form-sppd" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">SPPD</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-sppd-nomor-spt" class="control-label">Nomor Surat Tugas</label>
+						<input type="text" class="form-control" id="form-sppd-nomor-spt" placeholder="Masukan Nomor SPT" />
+					</div>
+					<div class="form-group">
+						<label for="form-sppd-nip" class="control-label">NIP</label>
+						<input type="text" class="form-control" id="form-sppd-nip" placeholder="Masukan NIP" />
+					</div>
+					<hr />
+					<div class="form-group">
+						<label for="form-sppd-nomor" class="control-label">Nomor SPPD</label>
+						<input type="text" class="form-control" id="form-sppd-nomor" placeholder="Masukan Nomor SPPD" />
+					</div>
+					<div class="form-group">
+						<label for="form-sppd-tanggal-berangkat" class="control-label">Tanggal Berangkat</label>
+						<input type="date" class="form-control" id="form-sppd-tanggal-berangkat" placeholder="Masukan Tanggal Berangkat" />
+					</div>
+					<div class="form-group">
+						<label for="form-sppd-transportasi" class="control-label">Moda Transportasi</label>
+						<input type="text" class="form-control" id="form-sppd-transportasi" placeholder="Masukan Moda Transportasi" />
+					</div>
+					<!--
+					<div class="form-group">
+						<label for="form-sppd-kode-rekening" class="control-label">Kode Rekening</label>
+						<input type="text" class="form-control" id="form-sppd-kode-rekening" placeholder="Masukan Kode Rekening" />
+					</div>
+					<div class="form-group">
+						<label for="form-sppd-nomor-dpa" class="control-label">Nomor DPA</label>
+						<input type="text" class="form-control" id="form-sppd-nomor-dpa" placeholder="Masukan Nomor DPA" />
+					</div>
+					-->
+					<div class="form-group">
+						<label for="form-sppd-tingkat" class="control-label">Tingkat</label>
+						<input type="text" class="form-control" id="form-sppd-tingkat" placeholder="Masukan Tingkat" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-sppd" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-form-pengikut" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Pengikut</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-pengikut-nama" class="control-label">Nama</label>
+						<input type="text" class="form-control" id="form-pengikut-nama" placeholder="Masukan Nama" />
+					</div>
+					<div class="form-group">
+						<label for="form-pengikut-tanggal-lahir" class="control-label">Tanggal Lahir</label>
+						<input type="date" class="form-control" id="form-pengikut-tanggal-lahir" placeholder="Masukan Tanggal Lahir" />
+					</div>
+					<div class="form-group">
+						<label for="form-pengikut-keterangan" class="control-label">Keterangan</label>
+						<input type="text" class="form-control" id="form-pengikut-keterangan" placeholder="Masukan Keterangan" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-pengikut" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

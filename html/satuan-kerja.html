@@ -1,0 +1,85 @@
+<div class="row">
+	<div class="col-md-12"><!-- table -->
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped text-center" id="table-kategori">
+						<thead>
+							<tr>
+								<th class="center">Kode</th>
+								<th class="center">Nama</th>
+								<th class="center">Tipe</th>
+								<th class="center">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody id="table">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
+						<a id="pageNumber">1</a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-skpd-tambah" data-toggle="modal" data-target="#modal-form-skpd">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
+						<input type="text" id="satker-satuan-kerja" list="list-satuan-kerja" class="form-control" placeholder="Pilih Satuan Kerja" aria-describedby="basic-addon1" />
+						<datalist id="list-satuan-kerja"></datalist>
+					</div>
+				</div><!-- row -->
+			</div>
+		</div>
+	</div><!-- table -->
+</div>
+
+<div class="modal fade" id="modal-form-skpd" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Data Unit Kerja</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-skpd-parent" class="control-label">Unit Kerja</label>
+						<input type="text" list="unitkerja-list" class="form-control" id="form-skpd-parent" placeholder="Masukan Unit Kerja" />
+						<datalist id="unitkerja-list" />
+					</div>
+					<div class="form-group">
+						<label for="form-skpd-kode" class="control-label">Kode</label>
+						<input type="text" class="form-control" id="form-skpd-kode" placeholder="Masukan Kode" />
+					</div>
+					<div class="form-group">
+						<label for="form-skpd-nama" class="control-label">Nama</label>
+						<input type="text" class="form-control" id="form-skpd-nama" placeholder="Masukan Nama" />
+					</div>
+					<div class="form-group">
+						<label for="form-skpd-tipe" class="control-label">Tipe</label>
+						<input type="text" class="form-control" id="form-skpd-tipe" placeholder="Masukan Tipe Satuan Kerja" list="list-tipe">
+						<datalist id="list-tipe">
+							<option>- PILIH -</option>
+							<option>SEKRETARIAT</option>
+							<option>DINAS</option>
+							<option>BADAN</option>
+							<option>UPT</option>
+							<option>BIDANG</option>
+							<option>BAGIAN</option>
+						</datalist>
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-skpd" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

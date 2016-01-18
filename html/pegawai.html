@@ -1,14 +1,4 @@
 <div class="row">
-	<div class="col-md-3">
-		<a href="#">
-			<div class="alert alert-info" role="alert" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai" href="#">
-				<span class="glyphicon glyphicon-user big-icon" aria-hidden="true"></span><b class="icon-text">Tambah Pegawai</b>
-			</div>
-		</a>
-	</div>
-</div>
-
-<div class="row">
 	<div class="col-md-12 col-sm-12"><!-- Table div -->
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -18,20 +8,30 @@
 							<tr>
 								<th class="center">Nip</th>
 								<th class="center">Nama</th>
-								<th class="center">Golongan</th>
-								<th class="center">Jabatan</th>
-								<th class="center">SKPD</th>
-								<th class="center">Bagian</th>
+								<th class="center">Satuan Kerja</th>
 								<th class="center">&nbsp</th>
 							</tr>
 						</thead>
 						<tbody id="table">
 						</tbody>
 					</table>
-					<div>
-						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward"></a>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
 						<a id="pageNumber">1</a>
-						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward"></a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-pegawai-tambah" data-toggle="modal" data-target="#modal-form-pegawai">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
+						<input type="text" id="text-pegawai-satuan-kerja" class="form-control" list="list-satker" placeholder="Pilih Satuan Kerja" />
+						<datalist id="list-satker" />
 					</div>
 				</div>
 			</div>
@@ -49,54 +49,185 @@
 	        <div class="modal-body">
 				<form role="form">
 					<div class="form-group">
+						<label for="form-pegawai-nik" class="control-label">NIK</label>
+						<input type="text" class="form-control" id="form-pegawai-nik" placeholder="Masukan NIK" />
+					</div>
+					<div class="form-group">
 						<label for="form-pegawai-nip" class="control-label">NIP</label>
 						<input type="text" class="form-control" id="form-pegawai-nip" placeholder="Masukan NIP" />
 					</div>
 					<div class="form-group">
-						<label for="form-pegawai-nama" class="control-label">Nama Pegawai</label>
+						<label for="form-pegawai-nama" class="control-label">Nama</label>
 						<input type="text" class="form-control" id="form-pegawai-nama" placeholder="Masukan Nama" />
 					</div>
 					<div class="form-group">
-						<label for="form-pegawai-golongan" class="control-label">Golongan</label>
-						<input type="text" class="form-control" id="form-pegawai-golongan" list="list-golongan" placeholder="Masukan Golongan" />
-						<datalist id="list-golongan">
-							<option>I A</option>
-							<option>I B</option>
-							<option>I C</option>
-							<option>I D</option>
-							<option>II A</option>
-							<option>II B</option>
-							<option>II C</option>
-							<option>II D</option>
-							<option>III A</option>
-							<option>III B</option>
-							<option>III C</option>
-							<option>III D</option>
-							<option>IV A</option>
-							<option>IV B</option>
-							<option>IV C</option>
-							<option>IV D</option>
-							<option>IV E</option>
+						<label for="form-pegawai-tanggal-lahir" class="control-label">Tanggal Lahir</label>
+						<input type="date" class="form-control" id="form-pegawai-tanggal-lahir" placeholder="Masukan Tanggal Lahir" aria-describedby="basic-addon1" />
+					</div>
+					<div class="form-group">
+						<label for="form-pegawai-pangkat" class="control-label">Golongan</label>
+						<input type="text" class="form-control" id="form-pegawai-pangkat" list="list-pangkat" placeholder="Masukan Golongan" aria-describedby="basic-addon1" />
+						<datalist id="list-pangkat">
+							<option>IA</option>
+							<option>IB</option>
+							<option>IC</option>
+							<option>ID</option>
+							<option>IIA</option>
+							<option>IIB</option>
+							<option>IIC</option>
+							<option>IID</option>
+							<option>IIIA</option>
+							<option>IIIB</option>
+							<option>IIIC</option>
+							<option>IIID</option>
+							<option>IVA</option>
+							<option>IVB</option>
+							<option>IVC</option>
+							<option>IVD</option>
+							<option>IVE</option>
+						</datalist>
+					</div>
+					<div class="form-group">
+						<label for="form-pegawai-eselon" class="control-label">Eselon</label>
+						<input type="text" class="form-control" id="form-pegawai-eselon" list="list-eselon" placeholder="Masukan Eselon" aria-describedby="basic-addon1" />
+						<datalist id="list-eselon">
+							<option>Ia</option>
+							<option>Ib</option>
+							<option>IIa</option>
+							<option>IIb</option>
+							<option>IIIa</option>
+							<option>IIIb</option>
+							<option>IVa</option>
+							<option>IVb</option>
+							<option>Va</option>
+							<option>Vb</option>
 						</datalist>
 					</div>
 					<div class="form-group">
 						<label for="form-pegawai-jabatan" class="control-label">Jabatan</label>
-						<input type="text" class="form-control" id="form-pegawai-jabatan" placeholder="Masukan Jabatan" />
+						<input type="text" class="form-control" id="form-pegawai-jabatan" placeholder="Masukan Jabatan" aria-describedby="basic-addon1" />
 					</div>
 					<div class="form-group">
-						<label for="form-pegawai-skpd" class="control-label">SKPD</label>
-						<input type="text" class="form-control" id="form-pegawai-skpd" list="list-skpd" placeholder="Pilih SKPD" />
-						<datalist id="list-skpd"></datalist>
-					</div>
-					<div class="form-group">
-						<label for="form-pegawai-bagian" class="control-label">Bagian</label>
-						<input type="text" class="form-control" id="form-pegawai-bagian" list="list-bagian" placeholder="Pilih Bagian" />
-						<datalist id="list-bagian"></datalist>
+						<label for="form-pegawai-password" class="control-label">Password</label>
+						<input type="text" class="form-control" id="form-pegawai-password" placeholder="Masukan Password" />
 					</div>
 				</form>
 	        </div><!-- modal-body -->
 	        <div class="modal-footer">
 				<button class="btn btn-primary" id="btn-simpan-pegawai" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-form-mutasi" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Mutasi Pegawai</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-mutasi-unit-kerja" class="control-label">Satuan Kerja</label>
+						<input type="text" class="form-control" id="form-mutasi-unit-kerja" list="list-satker" placeholder="Masukan Satuan Kerja" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-mutasi" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-form-promosi-pangkat" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Promosi Pangkat</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-promosi-pangkat-pangkat" class="control-label">Pangkat</label>
+						<input type="text" class="form-control" id="form-promosi-pangkat-pangkat" list="list-pangkat" placeholder="Masukan Pangkat" />
+						<datalist id="list-pangkat">
+							<option>IA</option>
+							<option>IB</option>
+							<option>IC</option>
+							<option>ID</option>
+							<option>IIA</option>
+							<option>IIB</option>
+							<option>IIC</option>
+							<option>IID</option>
+							<option>IIIA</option>
+							<option>IIIB</option>
+							<option>IIIC</option>
+							<option>IIID</option>
+							<option>IVA</option>
+							<option>IVB</option>
+							<option>IVC</option>
+							<option>IVD</option>
+							<option>IVE</option>
+						</datalist>
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-pangkat-nomor-sk" class="control-label">Nomor Surat Keputusan</label>
+						<input type="text" class="form-control" id="form-promosi-pangkat-nomor-sk" placeholder="Masukan Nomor Surat Keputusan" />
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-pangkat-tanggal-mulai" class="control-label">Tanggal Mulai</label>
+						<input type="date" class="form-control" id="form-promosi-pangkat-tanggal-mulai" placeholder="Masukan Tanggal Mulai" />
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-pangkat-tanggal-selesai" class="control-label">Tanggal Selesai</label>
+						<input type="date" class="form-control" id="form-promosi-pangkat-tanggal-selesai" placeholder="Masukan Tanggal Selesai" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-promosi-pangkat" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-form-promosi-jabatan" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Promosi Jabatan</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-promosi-jabatan-jabatan" class="control-label">Jabatan</label>
+						<input type="text" class="form-control" id="form-promosi-jabatan-jabatan" list="list-jabatan" placeholder="Masukan Jabatan" />
+						<datalist id="list-jabatan" />
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-jabatan-nomor-sk" class="control-label">Nomor Surat Keputusan</label>
+						<input type="text" class="form-control" id="form-promosi-jabatan-nomor-sk" placeholder="Masukan Nomor Surat Keputusan" />
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-jabatan-tanggal-mulai" class="control-label">Tanggal Mulai</label>
+						<input type="date" class="form-control" id="form-promosi-jabatan-tanggal-mulai" placeholder="Masukan Tanggal Mulai" />
+					</div>
+					<div class="form-group">
+						<label for="form-promosi-jabatan-tanggal-selesai" class="control-label">Tanggal Selesai</label>
+						<input type="date" class="form-control" id="form-promosi-jabatan-tanggal-selesai" placeholder="Masukan Tanggal Selesai" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-promosi-jabatan" data-dismiss="modal">Simpan</button>
 				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
 	        </div>
 		</div><!-- /.modal-content -->

@@ -1,0 +1,123 @@
+<div class="row">
+	<div class="col-md-7"><!-- table -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b>DAFTAR SURAT TUGAS</b>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped text-center" id="table-kategori">
+						<thead>
+							<tr>
+								<th class="center">Nomor</th>
+								<th class="center">Tanggal</th>
+								<th class="center">Status</th>
+								<th class="center">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody id="table">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-2">
+						<a href="#" id="prev" value="0"><span class="glyphicon glyphicon-backward big-icon"></a>
+						<a id="pageNumber">1</a>
+						<a href="#" id="next" value="0"><span class="glyphicon glyphicon-forward big-icon"></a>
+					</div>
+					<div class="col-md-3">
+						<button type="button" class="btn btn-primary" id="btn-spt-tambah" data-toggle="modal" data-target="#modal-form-spt">
+							<span class="glyphicon glyphicon-plus big-icon" aria-hidden="true"></span><b class="icon-text">Tambah</b>
+						</button>
+					</div>
+					<div class="col-md-7">
+						<input type="text" id="spt-satuan-kerja" list="list-satuan-kerja" class="form-control" placeholder="Pilih Satuan Kerja" aria-describedby="basic-addon1" />
+						<datalist id="list-satuan-kerja"></datalist>
+					</div>
+				</div><!-- row -->
+			</div><!-- footer -->
+		</div>
+	</div><!-- table -->
+	<div class="col-md-5"><!-- right table -->
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<b>DAFTAR PEMEGANG TUGAS</b>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped text-center" id="table-kategori">
+						<thead>
+							<tr>
+								<th class="center">NIP</th>
+								<th class="center">Nama</th>
+							</tr>
+						</thead>
+						<tbody id="table-pemegang-tugas">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div><!-- right table -->
+</div>
+
+<div class="modal fade" id="modal-form-spt" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Surat Tugas</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-spt-nomor" class="control-label">Nomor Surat Tugas</label>
+						<input type="text" class="form-control" id="form-spt-nomor" placeholder="Masukan Nomor" />
+					</div>
+					<div class="form-group">
+						<label for="form-spt-jumlah-hari" class="control-label">Jumlah Hari</label>
+						<input type="text" class="form-control" id="form-spt-jumlah-hari" placeholder="Masukan Jumlah Hari" />
+					</div>
+					<div class="form-group">
+						<label for="form-spt-tujuan" class="control-label">Tujuan</label>
+						<input type="text" class="form-control" id="form-spt-tujuan" placeholder="Masukan Tujuan" />
+					</div>
+					<div class="form-group">
+						<label for="form-spt-maksud" class="control-label">Maksud</label>
+						<input type="text" class="form-control" id="form-spt-maksud" placeholder="Masukan Maksud" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-spt" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="modal-form-pemegang-tugas" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Tutup</span></button>
+				<h4 class="modal-title">Tambah Pemegang Tugas</h4>
+	        </div>
+	        <div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<label for="form-pemegang-tugas-nip" class="control-label">NIP</label>
+						<input type="text" class="form-control" id="form-pemegang-tugas-nip" list="list-nip" placeholder="Masukan NIP" />
+						<datalist id="list-nip" />
+					</div>
+				</form>
+	        </div><!-- modal-body -->
+	        <div class="modal-footer">
+				<button class="btn btn-primary" id="btn-simpan-pemegang-tugas" data-dismiss="modal">Simpan</button>
+				<button class="btn btn-default" data-dismiss="modal">Tutup</button>
+	        </div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

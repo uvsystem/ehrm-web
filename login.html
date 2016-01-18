@@ -9,7 +9,7 @@
     <meta name="author" content="Deddy Ch. Kakunsi">
     <link rel="icon" href="images/favicon.png">
 
-    <title>Sistem Absensi | Login</title>
+    <title>eHRM | Login</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -58,9 +58,25 @@
     <!-- Doc's JS -->
     <script src="js/docs.min.js"></script>
 
-    <!-- UnitedVision's JS -->
-    <script src="js/uvs-api.js"></script>
-    <script src="js/uvs-object.js"></script>
-    <script src="js/login.js"></script>
+    <!-- UnitedVision's JS
+    <script src="https://uvs.web.id/api-v1/js/common.js"></script>
+	 -->
+    <script src="js/common.js"></script>
+	<script>
+		var restAdapter = rest( 'https://core-unitedvision.whelastic.net', 'ehrm' );
+		// var restAdapter = rest( 'http://localhost:8080', 'ehrm' );
+
+		$( document ).ready( function () {
+			
+			$( '#btn-login' ).click( function () {
+			
+				var username = $( '#username' ).val();
+				var password = $( '#password' ).val();
+
+				restAdapter.login( username, password );
+
+			} );
+		} );
+	</script>
   </body>
 </html>
