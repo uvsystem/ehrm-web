@@ -789,9 +789,9 @@ function navigation( role ) {
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +
 			'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
-			'<li class="divider">&nbsp;</li>' +
-			'<li><a id="menu-spt" href="#" data-toggle="tooltip" data-placement="right" title="SPT"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Surat Tugas</b></a></li>' +
-			'<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
+			// '<li class="divider">&nbsp;</li>' +
+			// '<li><a id="menu-spt" href="#" data-toggle="tooltip" data-placement="right" title="SPT"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Surat Tugas</b></a></li>' +
+			// '<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>' +
 			'<li><a id="menu-aplikasi" href="#" data-toggle="tooltip" data-placement="right" title="Aplikasi"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Aplikasi</b></a></li>';
@@ -806,9 +806,9 @@ function navigation( role ) {
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-kalendar" href="#" data-toggle="tooltip" data-placement="right" title="Kalendar"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Kalendar</b></a></li>' +
 			'<li><a id="menu-absensi" href="#" data-toggle="tooltip" data-placement="right" title="Absensi"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Absensi</b></a></li>' +
-			'<li class="divider">&nbsp;</li>' +
-			'<li><a id="menu-spt" href="#" data-toggle="tooltip" data-placement="right" title="SPT"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Surat Tugas</b></a></li>' +
-			'<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
+			// '<li class="divider">&nbsp;</li>' +
+			// '<li><a id="menu-spt" href="#" data-toggle="tooltip" data-placement="right" title="SPT"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">Surat Tugas</b></a></li>' +
+			// '<li><a id="menu-sppd" href="#" data-toggle="tooltip" data-placement="right" title="SPPD"><span class="glyphicon glyphicon-calendar big-icon"></span><b class="icon-text">SPPD</b></a></li>' +
 			'<li class="divider">&nbsp;</li>' +
 			'<li><a id="menu-rekap" href="#" data-toggle="tooltip" data-placement="right" title="Rekap"><span class="glyphicon glyphicon-briefcase big-icon"></span><b class="icon-text">Rekap</b></a></li>';
 
